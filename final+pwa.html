@@ -3,1479 +3,2107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OCT Analysis System</title>
-    <meta name="description" content="AI-Powered OCT Analysis System for CNV Detection">
+    <title>OCT Detection System - PWA</title>
+    
+    <!-- PWA Meta Tags -->
     <meta name="theme-color" content="#3b82f6">
-    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIk9DVCBBbmFseXNpcyBTeXN0ZW0iLAogICJzaG9ydF9uYW1lIjogIk9DVCBBbmFseXNpcyIsCiAgImRlc2NyaXB0aW9uIjogIkFJLVBvd2VyZWQgT0NUIEFuYWx5c2lzIFN5c3RlbSBmb3IgQ05WIERldGVjdGlvbiIsCiAgInN0YXJ0X3VybCI6ICIvIiwKICAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwKICAiYmFja2dyb3VuZF9jb2xvciI6ICIjZmZmZmZmIiwKICAidGhlbWVfY29sb3IiOiAiIzNiODJmNiIsCiAgIm9yaWVudGF0aW9uIjogInBvcnRyYWl0IiwKICAiaWNvbnMiOiBbCiAgICB7CiAgICAgICJzcmMiOiAiZGF0YTppbWFnZS9zdmcreG1sO2Jhc2U2NCxQSE4yWnlCM2FXUjBhRDBpTVRJNElpQm9aV2xuYUhROUlqRXlPQ0lnZG1sbGQwSnZlRDBpTUNBd0lERXlPQ0F4TWpnaUlIaHRiRzV6UFNKb2RIUndPaTh2ZDNkM0xuY3pMbTl5Wnk4eU1EQXdMM04yWnlJK1BHUmxabk0rUEdkcFlXUnBaVzUwSUdsa1BTSmhJaUJqZUQwaU5qUWlJR041UFNJMk5DSWdjakE5SWpJNElpQm1lRDBpTGpNaUlHWjVQU0l1TXlJZ1puQnlQU0l1TXlJK1BITjBiM0FnYjJabWMyVjBQU0l3SlNJZ2MzUnZjQzFqYjJ4dmNqMGlJek0zT0RkbVppSXZQand2WjNKaFpHbGxiblErUEdOcGNtTnNaU0JqZUQwaU5qUWlJR041UFNJMk5DSWdjakE5SWpJNElpQm1hV3hzUFNKMWNtd29JR0VwSWk4K1BIUmxlSFFnZUQwaU5qUWlJSGs5SWpjMklpQjBlWFJoYm1Ob2NqMGliV2xrWkd4bElpQm1hV3hzUFNKM2FHbDBaU0lnWm05dWRDMXphWHBsUFNJeU1DSWdabTl1ZEMxM1pXbG5hSFE5SWpjd01DSStQSE4yWnlCM2FXUjBhRDBpTVRZaUlHaGxhV2RvZEQwaU1UWWlJSFpwWlhkQ2IzZzlJakFnTUNBeE5pQXhOaUlnZUcxc2JuTTlJbWgwZEhBNkx5OTNkM2N1ZHpNdWIzSm5Mekl3TURBdmMzWm5JajQ4Y0dGMGFDQmtQU0p0T0M0eE5pQTJMakEwUXpndU1UWWdNaTQzTWlBeUxqY3lJRGd1TVRZdE1pNDNNaUE0TGpFMlV6RXpMalEwSURZdU1EUWdPQzR4TmlBMkxqQTBlaUlnWm1sc2JEMGlJek0zT0RkbVppSXZQand2YzNablBqd3ZkR1Y0ZEQ0OEwyUmxabk0rUEM5emRtYysiLAogICAgICAic2l6ZXMiOiAiMTI4eDEyOCIsCiAgICAgICJ0eXBlIjogImltYWdlL3N2Zyt4bWwiCiAgICB9LAogICAgewogICAgICAic3JjIjogImRhdGE6aW1hZ2Uvc3ZnK3htbDtiYXNlNjQsUEhOMlp5QjNhV1IwYUQwaU5URXlJaUJvWldsbmFIUTlJalV4TWlJZ2RtbGxkMEp2ZUQwaU1DQXdJRFV4TWlBMU1USWlJSGh0Ykc1elBTSm9kSFJ3T2k4dmQzZDNMbmN6TG05eVp5OHlNREF3TDNOMlp5SStQR1JsWm5NK1BHZHlZV1JwWlc1MElHbGtQU0poSWlCamVEMGlNalUySWlCamVUMGlNalUySWlCeVBTSnVNVEV5SWlCbWVEMGlMak1pSUdaNVBTSXVNeUlnWm5CeVBTSXVNeUkrUEhOMGIzQWdiMlptYzJWMFBTSXdKU0lnYzNSdmNDMWpiMnh2Y2owaUl6TTNNRGRHWMLRZ1BqdzJaM0poWkdsbGJuUStQR05wY21Oc1pTQmplRDBpTWpVMklpQmplVDBpTWpVMklpQnlQU0p1TVRFeUlpQm1hV3hzUFNKMWNtd29JR0VwSWk4K1BIUmxlSFFnZUQwaU1qVTJJaUI1UFNJek1EQWlJSFI1ZEdGdVkyaHlQU0p0YVdSa2JHVWlJR1pwYkd3OUluZG9hWFJsSWlCbWIyNTBMWE5wZW1VOUlqUTRJaUJtYjI1MExYZGxhV2RvZEQwaU56QXdJajQ4YzNablozZHBaSFJvUFNJek1pSWdhR1ZwWjJoMFBTSXpNaUlnZG1sbGQwSnZlRDBpTUNBd0lETXlJRE15SWlCNGJXeHVjejBpYUhSMGNEb3ZMM2QzZHk1M015NXZjbWN2TWpBd01DOXpkbWNpUGp4d1lYUm9JR1E5SW0wNExqRTJJRFlnUXpndU1UWWdNaTQzTWlBeUxqY3lJRGd1TVRZdE1pNDNNaUE0TGpFMlV6RXpMalEwSURZZ09DNHhOaUEyZWlJZ1ptbHNiRDBpSXpNM09EZG1aaUl2UGp3dmMzWm5Qand2ZEdWNGRENDhMMlJsWm5NK1BDOXpkbWMrIiwKICAgICAgInNpemVzIjogIjUxMng1MTIiLAogICAgICAidHlwZSI6ICJpbWFnZS9zdmcreG1sIgogICAgfQogIF0sCiAgImNhdGVnb3JpZXMiOiBbIm1lZGljYWwiLCAiaGVhbHRoY2FyZSIsICJhaS1hbmFseXNpcyJdCn0=">
-    <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="OCT Detection">
+    <meta name="description" content="AI-Powered Retinal Disease Detection System">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" id="manifest-placeholder">
+    
+    <!-- PWA Icons -->
+    <link rel="apple-touch-icon" sizes="180x180" id="apple-touch-icon">
+    <link rel="icon" type="image/png" sizes="32x32" id="favicon-32">
+    <link rel="icon" type="image/png" sizes="16x16" id="favicon-16">
+    <link rel="mask-icon" id="safari-pinned-tab" color="#3b82f6">
+    
+    <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
-        body { font-family: 'Sarabun', sans-serif; }
-        .upload-area.dragover { border-color: #dc2626; background-color: #fef2f2; }
-        .confidence-circle { transition: stroke-dashoffset 0.5s ease-in-out; }
-        .section-content { display: none; }
-        .section-content.active { display: block; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            line-height: 1.6;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+                linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header Styling */
+        .main-header {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.1));
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 3rem 2rem;
+            border-radius: 16px;
+            color: white;
+            text-align: center;
+            margin-bottom: 2rem;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .main-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: shimmer 3s infinite;
+            pointer-events: none;
+        }
+
+        .main-header h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            color: white;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .main-header p {
+            font-size: 1.3rem;
+            color: rgba(255, 255, 255, 0.9);
+            text-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Navigation */
+        .nav-tabs {
+            display: flex;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            padding: 8px;
+            margin-bottom: 2rem;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4);
+            overflow-x: auto;
+        }
+
+        .nav-tab {
+            flex: 1;
+            padding: 16px 24px;
+            border: none;
+            background: transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Sarabun', sans-serif;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            color: rgba(255, 255, 255, 0.8);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-tab.active {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.2));
+            color: white;
+            box-shadow: 
+                0 4px 15px rgba(255, 255, 255, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-tab:hover:not(.active) {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.1));
+            color: white;
+        }
+
+        .nav-tab-thick {
+            font-weight: 700 !important;
+            font-size: 1.05em;
+        }
+
+        /* Page Content */
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Cards */
+        .card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.1));
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4);
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 12px 40px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.5);
+        }
+
+        .card h3 {
+            color: white;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        .card p, .card div {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        /* Status Indicators */
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .status-ready {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+
+        .status-analyzing {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+        }
+
+        /* Buttons */
+        .btn {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.2));
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            border-radius: 12px;
+            padding: 1rem 2rem;
+            font-weight: 600;
+            font-family: 'Sarabun', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4);
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn:hover {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.3));
+            transform: translateY(-2px);
+            box-shadow: 
+                0 12px 40px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.5);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.8), rgba(5, 150, 105, 0.6));
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-success:hover {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.9), rgba(5, 150, 105, 0.7));
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.8), rgba(220, 38, 38, 0.6));
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .btn-danger:hover {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.9), rgba(220, 38, 38, 0.7));
+        }
+
+        /* Upload Area */
+        .upload-area {
+            border: 2px dashed rgba(255, 255, 255, 0.5);
+            border-radius: 16px;
+            padding: 3rem;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            color: white;
+        }
+
+        .upload-area:hover {
+            border-color: rgba(255, 255, 255, 0.8);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
+            transform: translateY(-2px);
+        }
+
+        .upload-area.dragover {
+            border-color: #10b981;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.1));
+        }
+
+        /* Results */
+        .result-card {
+            padding: 1.5rem;
+            border-radius: 16px;
+            margin: 1rem 0;
+        }
+
+        .cnv-detected {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(220, 38, 38, 0.1));
+            border-left: 4px solid #ef4444;
+            color: white;
+        }
+
+        .normal-result {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(5, 150, 105, 0.1));
+            border-left: 4px solid #10b981;
+            color: white;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.1));
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 1.5rem;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            color: white;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: white;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-family: 'Sarabun', sans-serif;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            background: #e2e8f0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        /* Login Page */
+        .login-container {
+            max-width: 400px;
+            margin: 2rem auto;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.1));
+            backdrop-filter: blur(20px);
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+        }
+
+        .login-container h2 {
+            color: white;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        /* History */
+        .history-item {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 1rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: white;
+        }
+
+        .history-item:hover {
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+            transform: translateY(-2px);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.2));
+        }
+
+        /* Confirm Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.85));
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 24px;
+            padding: 2.5rem;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4);
+            animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            text-align: center;
+        }
+
+        .modal h3 {
+            color: #1f2937;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .modal p {
+            color: #6b7280;
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .modal-btn {
+            padding: 0.75rem 2rem;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-family: 'Sarabun', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 120px;
+        }
+
+        .modal-btn-cancel {
+            background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+            color: #374151;
+            border: 1px solid #d1d5db;
+        }
+
+        .modal-btn-cancel:hover {
+            background: linear-gradient(135deg, #e5e7eb, #d1d5db);
+            transform: translateY(-1px);
+        }
+
+        .modal-btn-confirm {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+        }
+
+        .modal-btn-confirm:hover {
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+        }
+
+        /* Success Message */
+        .success-message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+            z-index: 1001;
+            animation: slideInRight 0.4s ease;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Animations */
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease;
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #5a67d8, #6b46c1);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .main-header h1 {
+                font-size: 2.5rem;
+            }
+
+            .nav-tabs {
+                flex-wrap: wrap;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .modal {
+                width: 95%;
+                padding: 1.5rem;
+            }
+        }
+
+        /* PWA Install Button */
+        .install-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 15px 20px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.3);
+            display: none;
+            z-index: 1000;
+        }
+
+        .install-btn:hover {
+            transform: scale(1.05);
+        }
+
+        /* Offline Indicator */
+        .offline-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #ef4444;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 25px;
+            font-weight: 600;
+            display: none;
+            z-index: 1000;
+        }
+
+        .online-indicator {
+            background: #10b981;
+        }
     </style>
 </head>
-<body class="bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen">
-    <!-- Navigation Header -->
-    <header class="bg-white shadow-sm" id="mainHeader" style="display: none;">
-        <div class="max-w-6xl mx-auto px-4 py-4">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
-                        <span class="text-white font-bold">👁️</span>
-                    </div>
-                    <div>
-                        <h1 class="text-xl font-bold text-slate-800">OCT Analysis System</h1>
-                        <p class="text-sm text-slate-600">AI-Powered CNV Detection</p>
-                    </div>
+<body>
+    <!-- PWA Install Button -->
+    <button id="installBtn" class="install-btn">📱 ติดตั้งแอป</button>
+    
+    <!-- Offline Indicator -->
+    <div id="offlineIndicator" class="offline-indicator">🔴 ออฟไลน์</div>
+
+    <!-- Confirm Modal -->
+    <div id="confirmModal" class="modal-overlay">
+        <div class="modal">
+            <h3>⚠️ ยืนยันการลบประวัติ</h3>
+            <p>คุณแน่ใจหรือไม่ที่จะลบประวัติการวิเคราะห์ทั้งหมด?<br>การดำเนินการนี้ไม่สามารถย้อนกลับได้</p>
+            <div class="modal-buttons">
+                <button class="modal-btn modal-btn-cancel" onclick="hideConfirmModal()">ยกเลิก</button>
+                <button class="modal-btn modal-btn-confirm" onclick="confirmClearHistory()">ลบทั้งหมด</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Analysis Confirm Modal -->
+    <div id="analysisConfirmModal" class="modal-overlay">
+        <div class="modal">
+            <h3>✅ ยืนยันข้อมูลผู้ป่วย</h3>
+            <div id="confirmPatientData" style="text-align: left; margin: 1.5rem 0; background: rgba(59, 130, 246, 0.1); padding: 1.5rem; border-radius: 12px; border: 1px solid rgba(59, 130, 246, 0.3);">
+                <!-- Patient data will be populated here -->
+            </div>
+            <p style="color: #6b7280; margin-bottom: 2rem;">กรุณาตรวจสอบข้อมูลให้ถูกต้องก่อนเริ่มการวิเคราะห์</p>
+            <div class="modal-buttons">
+                <button class="modal-btn modal-btn-cancel" onclick="hideAnalysisConfirmModal()">แก้ไขข้อมูล</button>
+                <button class="modal-btn modal-btn-confirm" onclick="confirmStartAnalysis()" style="background: linear-gradient(135deg, #10b981, #059669);">เริ่มวิเคราะห์</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Message -->
+    <div id="successMessage" class="success-message">
+        ✅ ลบประวัติเรียบร้อยแล้ว!
+    </div>
+
+    <div class="container">
+        <!-- Login Page -->
+        <div id="loginPage" class="page active">
+            <div class="main-header">
+                <h1>👁️ OCT Detection System</h1>
+                <p>AI-Powered Retinal Disease Detection System</p>
+            </div>
+            
+            <div class="login-container">
+                <h2 style="text-align: center; margin-bottom: 1.5rem;">เข้าสู่ระบบ</h2>
+                
+                <div class="form-group">
+                    <label class="form-label">Username</label>
+                    <input type="text" id="username" class="form-input" placeholder="doctor" value="doctor">
                 </div>
                 
-                <!-- Navigation Menu -->
-                <nav class="flex items-center space-x-4">
-                    <button class="nav-btn px-4 py-2 rounded-lg font-medium transition-colors" data-section="dashboard">
-                        📊 Dashboard
-                    </button>
-                    <button class="nav-btn px-4 py-2 rounded-lg font-medium transition-colors" data-section="upload">
-                        📁 New Upload
-                    </button>
-                    <button class="nav-btn px-4 py-2 rounded-lg font-medium transition-colors" data-section="history">
-                        📋 Patient History
-                    </button>
-                    <button id="installBtn" class="bg-gradient-to-r from-green-500 to-green-600 text-white px-4 py-2 rounded-lg font-medium hover:from-green-600 hover:to-green-700 transition-colors" style="display: none;">
-                        📱 Install App
-                    </button>
-                    <button class="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-4 py-2 rounded-lg font-medium hover:from-blue-600 hover:to-purple-600 transition-colors" onclick="logout()">
-                        🚪 Logout
-                    </button>
-                </nav>
-                
-                <div class="flex items-center space-x-2 bg-gray-100 px-4 py-2 rounded-full" id="statusIndicator">
-                    <div class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-                    <span class="text-gray-800 font-medium">Ready for Analysis</span>
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" id="password" class="form-input" placeholder="123456" value="123456">
                 </div>
                 
-                <!-- Offline Notification -->
-                <div id="offlineNotification" class="fixed top-4 right-4 bg-orange-500 text-white px-4 py-2 rounded-lg shadow-lg z-50" style="display: none;">
-                    <div class="flex items-center space-x-2">
-                        <span>📡</span>
-                        <span>Working Offline</span>
-                    </div>
-                </div>
+                <button onclick="login()" class="btn" style="width: 100%; margin-bottom: 1rem;">เข้าสู่ระบบ</button>
                 
-                <!-- Update Available Notification -->
-                <div id="updateNotification" class="fixed top-4 right-4 bg-blue-500 text-white px-4 py-3 rounded-lg shadow-lg z-50" style="display: none;">
-                    <div class="flex items-center justify-between space-x-4">
-                        <div class="flex items-center space-x-2">
-                            <span>🔄</span>
-                            <span>Update Available</span>
-                        </div>
-                        <button id="updateBtn" class="bg-white text-blue-500 px-3 py-1 rounded text-sm font-medium hover:bg-blue-50">
-                            Update
-                        </button>
-                    </div>
+                <div style="background: #dbeafe; padding: 1rem; border-radius: 8px; text-align: center;">
+                    <small><strong>Demo:</strong> username: doctor, password: 123456</small>
                 </div>
             </div>
         </div>
-    </header>
 
-    <!-- Login Section -->
-    <section id="loginSection" class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-500 via-purple-500 to-purple-600">
-        <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md">
-            <div class="text-center mb-8">
-                <div class="w-16 h-16 bg-gradient-to-br from-blue-400 to-purple-400 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                    <span class="text-2xl">👁️</span>
-                </div>
-                <h2 class="text-2xl font-bold text-slate-800">OCT Analysis System</h2>
-                <p class="text-slate-600">เข้าสู่ระบบเพื่อเริ่มการวิเคราะห์</p>
+        <!-- Main App -->
+        <div id="mainApp" class="page">
+            <!-- Header -->
+            <div class="main-header">
+                <h1>👁️ OCT Detection System</h1>
+                <p>AI-Powered Retinal Disease Detection • Dashboard</p>
             </div>
-            
-            <form id="loginForm" class="space-y-4">
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-2">Username</label>
-                    <input type="text" id="username" class="w-full px-4 py-3 border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-400" placeholder="Enter username" required>
+
+            <!-- Navigation -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <div class="nav-tabs" style="margin-bottom: 0;">
+                    <button class="nav-tab active" onclick="showPage('dashboard')">📊 Dashboard</button>
+                    <button class="nav-tab nav-tab-thick" onclick="showPage('newAnalysis')">📁 New Analysis</button>
+                    <button class="nav-tab" onclick="showPage('patientHistory')">🔍 Patient History Search</button>
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-2">Password</label>
-                    <input type="password" id="password" class="w-full px-4 py-3 border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-400" placeholder="Enter password" required>
-                </div>
-                <button type="submit" class="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white py-3 rounded-lg font-semibold hover:from-blue-600 hover:to-purple-600 transition-colors">
-                    เข้าสู่ระบบ
+                <button onclick="logout()" class="btn btn-danger" style="padding: 0.75rem 1.5rem; font-size: 0.9rem;">
+                    🚪 Logout
                 </button>
-            </form>
-            
-            <div class="mt-6 text-center text-sm text-slate-500">
-                <p>Demo: username: <strong>doctor</strong>, password: <strong>123456</strong></p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Main Content Container -->
-    <div id="mainContent" style="display: none;">
-        
-        <!-- Dashboard Section (Version 20 Style) -->
-        <section id="dashboardSection" class="section-content max-w-6xl mx-auto px-4 py-8">
-            <div class="mb-8">
-                <h2 class="text-3xl font-bold text-slate-800 mb-2">Dashboard</h2>
-                <p class="text-slate-600">ภาพรวมการวิเคราะห์และสถิติ</p>
-            </div>
-            
-            <!-- Stats Cards -->
-            <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8">
-                <div class="bg-white rounded-xl shadow-sm p-6">
-                    <div class="flex items-center">
-                        <div class="w-12 h-12 bg-gradient-to-br from-blue-100 to-purple-100 rounded-lg flex items-center justify-center">
-                            <span class="text-2xl">📊</span>
-                        </div>
-                        <div class="ml-4">
-                            <p class="text-sm text-slate-600">Total Analyses</p>
-                            <p class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent" id="totalAnalyses">0</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="bg-white rounded-xl shadow-sm p-6">
-                    <div class="flex items-center">
-                        <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
-                            <span class="text-2xl">⚠️</span>
-                        </div>
-                        <div class="ml-4">
-                            <p class="text-sm text-slate-600">CNV Detected</p>
-                            <p class="text-2xl font-bold text-orange-600" id="cnvDetected">0</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="bg-white rounded-xl shadow-sm p-6">
-                    <div class="flex items-center">
-                        <div class="w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center">
-                            <span class="text-2xl">✅</span>
-                        </div>
-                        <div class="ml-4">
-                            <p class="text-sm text-slate-600">Normal Results</p>
-                            <p class="text-2xl font-bold text-emerald-600" id="normalResults">0</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="bg-white rounded-xl shadow-sm p-6">
-                    <div class="flex items-center">
-                        <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                            <span class="text-2xl">🎯</span>
-                        </div>
-                        <div class="ml-4">
-                            <p class="text-sm text-slate-600">Avg Confidence</p>
-                            <p class="text-2xl font-bold text-blue-600" id="avgConfidence">0%</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Quick Actions -->
-            <div class="bg-white rounded-xl shadow-sm p-6 mb-8">
-                <h3 class="text-lg font-semibold text-slate-800 mb-4">Quick Actions</h3>
-                <div class="flex space-x-4">
-                    <button class="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-8 py-4 rounded-lg font-bold hover:from-blue-600 hover:to-purple-600 transition-colors" onclick="showSection('upload')">
-                        📁 New Analysis
-                    </button>
-                    <button class="bg-gradient-to-r from-blue-100 to-purple-100 text-blue-700 px-8 py-4 rounded-lg font-semibold hover:from-blue-200 hover:to-purple-200 transition-colors" onclick="showSection('history')">
-                        📋 View History
-                    </button>
-                </div>
-            </div>
-            
-            <!-- Recent Analyses -->
-            <div class="bg-white rounded-xl shadow-sm p-6">
-                <h3 class="text-lg font-semibold text-slate-800 mb-4">Recent Analyses</h3>
-                <div id="recentAnalyses" class="space-y-4">
-                    <div class="text-center text-slate-500 py-8">
-                        <div class="text-4xl mb-2">📊</div>
-                        <p>No analyses yet. Start by uploading an OCT image.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Upload Section (Version 9 Style) -->
-        <section id="uploadSection" class="section-content max-w-6xl mx-auto px-4 py-8">
-            <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
-                <div class="upload-area p-12 text-center border-2 border-dashed border-blue-300 m-6 rounded-xl hover:border-purple-400 hover:bg-gradient-to-br hover:from-blue-50 hover:to-purple-50 transition-all cursor-pointer" id="uploadArea">
-                    <div class="text-6xl mb-4">📁</div>
-                    <h3 class="text-2xl font-semibold mb-2 text-slate-800">Upload OCT Image</h3>
-                    <p class="text-slate-600 mb-6">Drag and drop your OCT B-Scan image here or click to browse</p>
-                    <input type="file" id="imageInput" accept="image/*" hidden>
-                    <button class="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-8 py-3 rounded-lg font-semibold hover:from-blue-600 hover:to-purple-600 transition-colors" id="uploadBtn">
-                        Choose File
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <!-- Results Section (Version 9 Style) -->
-        <section id="resultsSection" class="section-content max-w-6xl mx-auto px-4 py-8">
-            <!-- Main Result Card -->
-            <div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-8">
-                <!-- Patient Info -->
-                <div class="bg-gradient-to-r from-red-50 to-pink-50 px-6 py-4 border-b">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <h2 class="text-lg font-semibold text-gray-900" id="patientInfo">Patient Analysis</h2>
-                            <p class="text-sm text-gray-600" id="analysisTime">Processing...</p>
-                        </div>
-                        <div class="text-right" id="resultStatus">
-                            <p class="text-2xl font-bold text-gray-600">PROCESSING</p>
-                            <p class="text-sm text-gray-600">Please wait</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- OCT Image with Analysis -->
-                <div class="p-6">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-lg font-semibold text-gray-900">OCT B-Scan Analysis</h3>
-                        <div class="flex items-center space-x-2 bg-yellow-100 px-3 py-1 rounded-full" id="analysisBadge">
-                            <span class="text-yellow-600 text-sm font-medium">⏳ Analyzing...</span>
-                        </div>
-                    </div>
-
-                    <!-- OCT Image Display -->
-                    <div class="relative bg-black rounded-xl overflow-hidden">
-                        <img id="uploadedImage" src="" alt="Uploaded OCT Image" class="w-full h-96 object-contain bg-black rounded-xl" style="display: none;">
-                        
-                        <div id="imagePlaceholder" class="w-full h-96 bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center">
-                            <div class="text-center text-white">
-                                <div class="text-6xl mb-4">🖼️</div>
-                                <p class="text-lg font-medium">Uploaded OCT Image</p>
-                                <p class="text-sm opacity-75">Your uploaded image will display here</p>
-                            </div>
-                        </div>
-
-                        <!-- Image Labels -->
-                        <div class="absolute top-4 left-4 bg-black bg-opacity-70 text-white px-3 py-2 rounded">
-                            <p class="text-sm font-medium">OCT B-Scan • Macular Region</p>
-                            <p class="text-xs opacity-80">6mm scan • High resolution</p>
-                        </div>
-
-                        <div class="absolute top-4 right-4 bg-yellow-600 text-white px-3 py-2 rounded font-bold" id="detectionLabel">
-                            ANALYZING...
-                        </div>
-
-                        <div class="absolute bottom-4 right-4 bg-black bg-opacity-70 text-white px-3 py-2 rounded">
-                            <p class="text-xs" id="confidenceLabel">AI Confidence: <span class="font-bold text-yellow-400">---%</span></p>
-                        </div>
-                    </div>
-                </div>
             </div>
 
-            <!-- Analysis Results Grid -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Confidence Score -->
-                <div class="bg-white rounded-xl shadow-sm p-6">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4 text-center">AI Confidence Score</h3>
-                    <div class="flex justify-center mb-4">
-                        <div class="relative w-32 h-32">
-                            <svg class="confidence-ring w-32 h-32" viewBox="0 0 100 100" style="transform: rotate(-90deg);">
-                                <circle cx="50" cy="50" r="45" stroke="#e5e7eb" stroke-width="8" fill="none"/>
-                                <circle cx="50" cy="50" r="45" stroke="#10b981" stroke-width="8" fill="none" 
-                                        class="confidence-circle" id="confidenceCircle" style="stroke-dasharray: 283; stroke-dashoffset: 283; transition: stroke-dashoffset 0.5s ease-in-out;"/>
-                            </svg>
-                            <div class="absolute inset-0 flex items-center justify-center">
-                                <div class="text-center">
-                                    <div class="text-2xl font-bold text-green-600" id="confidencePercentage">0%</div>
-                                    <div class="text-xs text-gray-500">Confidence</div>
-                                </div>
-                            </div>
-                        </div>
+            <!-- Dashboard Page -->
+            <div id="dashboardPage" class="tab-content active">
+                <!-- Statistics Section -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalAnalyses">0</div>
+                        <div>📊 Total Analyses</div>
                     </div>
-                    <div class="text-center" id="confidenceStatus">
-                        <div class="inline-flex items-center px-3 py-1 bg-gray-100 text-gray-800 rounded-full text-sm font-medium">
-                            ⏳ Processing...
-                        </div>
-                        <p class="text-xs text-gray-600 mt-2">Analyzing image data</p>
+                    <div class="stat-card">
+                        <div class="stat-number" id="cnvDetected">0</div>
+                        <div>⚠️ Disease Detected</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="normalResults">0</div>
+                        <div>✅ Normal Results</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="avgConfidence">0%</div>
+                        <div>🎯 Avg Confidence</div>
                     </div>
                 </div>
 
-                <!-- Detection Results -->
-                <div class="bg-white rounded-xl shadow-sm p-6">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Detection Results</h3>
-                    <div class="space-y-4" id="detectionResults">
-                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                            <div>
-                                <p class="font-medium text-gray-800">Analysis Status</p>
-                                <p class="text-sm text-gray-600">Processing...</p>
-                            </div>
-                            <div class="w-3 h-3 bg-gray-400 rounded-full"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Recommended Actions -->
-                <div class="bg-white rounded-xl shadow-sm p-6">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Recommended Actions</h3>
-                    <div class="space-y-3" id="recommendationsList">
-                        <div class="p-3 bg-gray-50 border-l-4 border-gray-400 rounded">
-                            <p class="font-medium text-gray-800 text-sm">⏳ Analysis in Progress</p>
-                            <p class="text-xs text-gray-600">Please wait for results</p>
-                        </div>
-                    </div>
-
-                    <div class="mt-4 space-y-2">
-                        <button class="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white py-2 px-4 rounded-lg font-medium hover:from-blue-600 hover:to-purple-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" id="downloadBtn" disabled>
-                            📄 Download Report
-                        </button>
-                        <button class="w-full bg-gradient-to-r from-blue-100 to-purple-100 text-blue-700 py-3 px-4 rounded-lg font-bold hover:from-blue-200 hover:to-purple-200 transition-colors" id="newAnalysisBtn">
-                            🔄 New Analysis
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Summary Banner -->
-            <div class="mt-8 bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl p-6 text-white" id="summaryBanner">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <h3 class="text-xl font-bold mb-2" id="summaryTitle">📊 Analysis Summary</h3>
-                        <p class="text-blue-100" id="summaryText">
-                            Analysis results will appear here after processing.
+                <!-- Recent Analyses Section -->
+                <div class="card">
+                    <h3>📋 Recent Analyses</h3>
+                    <div id="recentAnalyses">
+                        <p style="text-align: center; color: rgba(255,255,255,0.7); padding: 2rem;">
+                            📊 No recent analyses available
                         </p>
                     </div>
-                    <div class="text-right">
-                        <button class="bg-white text-red-600 px-6 py-3 rounded-lg font-semibold hover:bg-red-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" id="summaryDownloadBtn" disabled>
-                            📄 Download Report
-                        </button>
+                </div>
+
+                <!-- Analysis History Section -->
+                <div class="card">
+                    <h3>📊 Analysis History</h3>
+                    <div id="analysisHistoryList">
+                        <p style="text-align: center; color: rgba(255,255,255,0.7); padding: 2rem;">
+                            📈 Analysis history will appear here
+                        </p>
                     </div>
                 </div>
             </div>
-        </section>
 
-        <!-- Patient History Section -->
-        <section id="historySection" class="section-content max-w-6xl mx-auto px-4 py-8">
-            <div class="mb-8">
-                <h2 class="text-3xl font-bold text-slate-800 mb-2">Patient History</h2>
-                <p class="text-slate-600">ประวัติการวิเคราะห์ทั้งหมด</p>
-            </div>
-            
-            <!-- History Filters -->
-            <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
-                <div class="flex items-center space-x-4">
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Filter by Result</label>
-                        <select id="historyFilter" class="px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-400">
-                            <option value="all">All Results</option>
-                            <option value="cnv">CNV Detected</option>
-                            <option value="normal">Normal</option>
-                        </select>
+            <!-- New Analysis Page -->
+            <div id="newAnalysisPage" class="tab-content">
+                <!-- Upload OCT Image Section -->
+                <div id="uploadSection" class="card">
+                    <h3>📁 Upload OCT Image</h3>
+                    <div class="upload-area" onclick="document.getElementById('fileInput').click()">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">📁</div>
+                        <h4>Click to upload or drag & drop</h4>
+                        <p>Supported formats: JPG, PNG, DICOM</p>
+                        <p style="font-size: 0.9rem; color: rgba(255,255,255,0.7);">Maximum file size: 10MB</p>
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Sort by</label>
-                        <select id="historySort" class="px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-400">
-                            <option value="newest">Newest First</option>
-                            <option value="oldest">Oldest First</option>
-                            <option value="confidence">Highest Confidence</option>
-                        </select>
+                    <input type="file" id="fileInput" accept="image/*,.dcm" style="display: none;" onchange="handleFileSelect(event)">
+                </div>
+
+                <!-- Patient Information Form -->
+                <div id="patientInfoForm" class="card">
+                    <h3>📋 Patient Information</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+                        <div class="form-group">
+                            <label class="form-label" style="color: white;">รหัสผู้ป่วย *</label>
+                            <input type="text" id="patientId" class="form-input" placeholder="P12345" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); color: white;" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" style="color: white;">ข้างของตา *</label>
+                            <select id="eyeSide" class="form-input" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); color: white;" required>
+                                <option value="">เลือกข้างของตา</option>
+                                <option value="OD">OD (ตาขวา)</option>
+                                <option value="OS">OS (ตาซ้าย)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" style="color: white;">วันที่ตรวจ *</label>
+                            <input type="date" id="examDate" class="form-input" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); color: white;" required>
+                        </div>
                     </div>
-                    <div class="flex-1"></div>
-                    <button class="bg-slate-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-slate-700 transition-colors" onclick="clearHistory()">
-                        🗑️ Clear History
+                    
+                    <button onclick="submitPatientInfo()" class="btn" style="width: 100%; margin-top: 1.5rem; padding: 1.2rem 2rem; font-size: 1.1rem; font-weight: 700;">
+                        📝 Submit
                     </button>
                 </div>
-            </div>
-            
-            <!-- History List -->
-            <div id="historyList" class="space-y-4">
-                <div class="text-center text-slate-500 py-12">
-                    <div class="text-6xl mb-4">📋</div>
-                    <p class="text-lg">No analysis history found</p>
-                    <p class="text-sm">Start analyzing OCT images to see history here</p>
+
+                <!-- Analysis Progress -->
+                <div id="analysisProgress" class="card" style="display: none;">
+                    <div class="status-indicator status-analyzing">
+                        <span>🟡</span>
+                        <span>Analyzing Image...</span>
+                    </div>
+                    <h3>🤖 AI is analyzing your OCT image...</h3>
+                    <div class="progress-container">
+                        <div id="progressBar" class="progress-bar" style="width: 0%"></div>
+                    </div>
+                    <p id="progressText" style="text-align: center;">🔍 Analyzing... 0%</p>
+                </div>
+
+                <!-- Analysis Results -->
+                <div id="analysisResults" class="card" style="display: none;">
+                    <!-- Results will be populated here -->
                 </div>
             </div>
-        </section>
+
+            <!-- Patient History Search Page -->
+            <div id="patientHistoryPage" class="tab-content">
+                <!-- Search & Filter Section -->
+                <div class="card">
+                    <h3>🔍 Search & Filter</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
+                        <div class="form-group">
+                            <label class="form-label" style="color: white;">Patient ID</label>
+                            <input type="text" id="searchPatientId" class="form-input" placeholder="P12345" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); color: white;">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" style="color: white;">Date Range</label>
+                            <input type="date" id="searchDateFrom" class="form-input" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); color: white;">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" style="color: white;">Result Type</label>
+                            <select id="searchResultType" class="form-input" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); color: white;">
+                                <option value="">All Results</option>
+                                <option value="cnv">CNV Detected</option>
+                                <option value="normal">Normal</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; gap: 1rem;">
+                        <button onclick="filterHistory()" class="btn" style="flex: 1;">🔍 Search</button>
+                        <button onclick="clearHistory()" class="btn btn-danger">🗑️ Clear All History</button>
+                    </div>
+                </div>
+
+                <!-- Search Results Section -->
+                <div id="searchResults" class="card">
+                    <h3>📊 Search Results</h3>
+                    <div id="historyResults">
+                        <p style="text-align: center; color: rgba(255,255,255,0.7); padding: 2rem;">
+                            🔍 Use the search filters above to find analysis results.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
-        class OCTAnalyzer {
-            constructor() {
-                this.patientHistory = JSON.parse(localStorage.getItem('octHistory') || '[]');
-                this.currentSection = 'login';
-                this.isLoggedIn = false;
-                this.currentAnalysis = null;
-                this.initializeElements();
-                this.setupEventListeners();
-                this.updateDashboardStats();
-            }
+        // PWA and App State
+        let deferredPrompt;
+        let analysisHistory = JSON.parse(localStorage.getItem('octAnalysisHistory') || '[]');
+        let currentAnalysis = null;
 
-            initializeElements() {
-                // Login elements
-                this.loginSection = document.getElementById('loginSection');
-                this.loginForm = document.getElementById('loginForm');
-                this.mainContent = document.getElementById('mainContent');
-                this.mainHeader = document.getElementById('mainHeader');
-                
-                // Navigation elements
-                this.navButtons = document.querySelectorAll('.nav-btn');
-                
-                // Section elements
-                this.dashboardSection = document.getElementById('dashboardSection');
-                this.uploadSection = document.getElementById('uploadSection');
-                this.resultsSection = document.getElementById('resultsSection');
-                this.historySection = document.getElementById('historySection');
-                
-                // Upload elements
-                this.uploadArea = document.getElementById('uploadArea');
-                this.imageInput = document.getElementById('imageInput');
-                this.uploadBtn = document.getElementById('uploadBtn');
-                
-                // Display elements
-                this.uploadedImage = document.getElementById('uploadedImage');
-                this.imagePlaceholder = document.getElementById('imagePlaceholder');
-                
-                // Status elements
-                this.statusIndicator = document.getElementById('statusIndicator');
-                this.analysisBadge = document.getElementById('analysisBadge');
-                this.detectionLabel = document.getElementById('detectionLabel');
-                this.confidenceLabel = document.getElementById('confidenceLabel');
-                
-                // Result elements
-                this.patientInfo = document.getElementById('patientInfo');
-                this.analysisTime = document.getElementById('analysisTime');
-                this.resultStatus = document.getElementById('resultStatus');
-                this.confidencePercentage = document.getElementById('confidencePercentage');
-                this.confidenceCircle = document.getElementById('confidenceCircle');
-                this.confidenceStatus = document.getElementById('confidenceStatus');
-                this.detectionResults = document.getElementById('detectionResults');
-                this.recommendationsList = document.getElementById('recommendationsList');
-                
-                // Summary elements
-                this.summaryTitle = document.getElementById('summaryTitle');
-                this.summaryText = document.getElementById('summaryText');
-                
-                // Action buttons
-                this.downloadBtn = document.getElementById('downloadBtn');
-                this.newAnalysisBtn = document.getElementById('newAnalysisBtn');
-                this.summaryDownloadBtn = document.getElementById('summaryDownloadBtn');
-                
-                // Dashboard elements
-                this.totalAnalyses = document.getElementById('totalAnalyses');
-                this.cnvDetected = document.getElementById('cnvDetected');
-                this.normalResults = document.getElementById('normalResults');
-                this.avgConfidence = document.getElementById('avgConfidence');
-                this.recentAnalyses = document.getElementById('recentAnalyses');
-                
-                // History elements
-                this.historyFilter = document.getElementById('historyFilter');
-                this.historySort = document.getElementById('historySort');
-                this.historyList = document.getElementById('historyList');
-            }
+        // PWA Installation
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            document.getElementById('installBtn').style.display = 'block';
+        });
 
-            setupEventListeners() {
-                // Login form
-                if (this.loginForm) {
-                    this.loginForm.addEventListener('submit', (e) => this.handleLogin(e));
+        document.getElementById('installBtn').addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    document.getElementById('installBtn').style.display = 'none';
                 }
-                
-                // Navigation buttons
-                this.navButtons.forEach(btn => {
-                    btn.addEventListener('click', (e) => {
-                        const section = e.target.getAttribute('data-section');
-                        this.showSection(section);
+                deferredPrompt = null;
+            }
+        });
+
+        // PWA Setup and Service Worker Registration
+        function setupPWA() {
+            // Create manifest
+            const manifest = {
+                name: "OCT Detection System - AI-Powered Retinal Analysis",
+                short_name: "OCT Analysis",
+                description: "AI-Powered Retinal Disease Detection System for Medical Professionals",
+                start_url: "./",
+                display: "standalone",
+                background_color: "#667eea",
+                theme_color: "#3b82f6",
+                orientation: "portrait-primary",
+                scope: "./",
+                lang: "th",
+                categories: ["medical", "health", "productivity"],
+                icons: [
+                    {
+                        src: generateIcon(72),
+                        sizes: "72x72",
+                        type: "image/png",
+                        purpose: "any maskable"
+                    },
+                    {
+                        src: generateIcon(96),
+                        sizes: "96x96", 
+                        type: "image/png",
+                        purpose: "any maskable"
+                    },
+                    {
+                        src: generateIcon(128),
+                        sizes: "128x128",
+                        type: "image/png",
+                        purpose: "any maskable"
+                    },
+                    {
+                        src: generateIcon(144),
+                        sizes: "144x144",
+                        type: "image/png",
+                        purpose: "any maskable"
+                    },
+                    {
+                        src: generateIcon(152),
+                        sizes: "152x152",
+                        type: "image/png",
+                        purpose: "any maskable"
+                    },
+                    {
+                        src: generateIcon(192),
+                        sizes: "192x192",
+                        type: "image/png",
+                        purpose: "any maskable"
+                    },
+                    {
+                        src: generateIcon(384),
+                        sizes: "384x384",
+                        type: "image/png",
+                        purpose: "any maskable"
+                    },
+                    {
+                        src: generateIcon(512),
+                        sizes: "512x512",
+                        type: "image/png",
+                        purpose: "any maskable"
+                    }
+                ],
+                shortcuts: [
+                    {
+                        name: "New Analysis",
+                        short_name: "Analyze",
+                        description: "Start a new OCT image analysis",
+                        url: "./?page=newAnalysis",
+                        icons: [{ src: generateIcon(96), sizes: "96x96" }]
+                    },
+                    {
+                        name: "Patient History",
+                        short_name: "History", 
+                        description: "Search patient analysis history",
+                        url: "./?page=patientHistory",
+                        icons: [{ src: generateIcon(96), sizes: "96x96" }]
+                    }
+                ]
+            };
+
+            // Set manifest
+            const manifestBlob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
+            const manifestURL = URL.createObjectURL(manifestBlob);
+            document.getElementById('manifest-placeholder').href = manifestURL;
+
+            // Set icons
+            document.getElementById('apple-touch-icon').href = generateIcon(180);
+            document.getElementById('favicon-32').href = generateIcon(32);
+            document.getElementById('favicon-16').href = generateIcon(16);
+            document.getElementById('safari-pinned-tab').href = generateIcon(180);
+        }
+
+        function generateIcon(size) {
+            const canvas = document.createElement('canvas');
+            canvas.width = size;
+            canvas.height = size;
+            const ctx = canvas.getContext('2d');
+
+            // Create gradient background
+            const gradient = ctx.createLinearGradient(0, 0, size, size);
+            gradient.addColorStop(0, '#667eea');
+            gradient.addColorStop(1, '#764ba2');
+            
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, size, size);
+
+            // Add eye icon
+            ctx.fillStyle = 'white';
+            ctx.font = `${size * 0.5}px Arial`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('👁️', size / 2, size / 2);
+
+            return canvas.toDataURL('image/png');
+        }
+
+        // Advanced Service Worker
+        function registerServiceWorker() {
+            if ('serviceWorker' in navigator) {
+                const swCode = `
+                    const CACHE_NAME = 'oct-analysis-v2.1';
+                    const STATIC_CACHE = 'oct-static-v2.1';
+                    const DYNAMIC_CACHE = 'oct-dynamic-v2.1';
+                    
+                    const STATIC_FILES = [
+                        './',
+                        './index.html',
+                        'https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap'
+                    ];
+
+                    // Install event
+                    self.addEventListener('install', (event) => {
+                        console.log('[SW] Installing...');
+                        event.waitUntil(
+                            caches.open(STATIC_CACHE)
+                                .then((cache) => {
+                                    console.log('[SW] Caching static files');
+                                    return cache.addAll(STATIC_FILES);
+                                })
+                                .then(() => {
+                                    console.log('[SW] Skip waiting');
+                                    return self.skipWaiting();
+                                })
+                        );
                     });
-                });
-                
-                // Upload events
-                if (this.uploadBtn) this.uploadBtn.addEventListener('click', () => this.imageInput.click());
-                if (this.imageInput) this.imageInput.addEventListener('change', (e) => this.handleFileSelect(e));
-                
-                // Drag and drop events
-                if (this.uploadArea) {
-                    this.uploadArea.addEventListener('dragover', (e) => this.handleDragOver(e));
-                    this.uploadArea.addEventListener('dragleave', (e) => this.handleDragLeave(e));
-                    this.uploadArea.addEventListener('drop', (e) => this.handleDrop(e));
-                    this.uploadArea.addEventListener('click', () => this.imageInput.click());
-                }
-                
-                // Action buttons
-                if (this.newAnalysisBtn) this.newAnalysisBtn.addEventListener('click', () => this.resetToUpload());
-                if (this.downloadBtn) this.downloadBtn.addEventListener('click', () => this.downloadReport());
-                if (this.summaryDownloadBtn) this.summaryDownloadBtn.addEventListener('click', () => this.downloadReport());
-                
-                // History filters
-                if (this.historyFilter) this.historyFilter.addEventListener('change', () => this.updateHistoryDisplay());
-                if (this.historySort) this.historySort.addEventListener('change', () => this.updateHistoryDisplay());
-            }
 
-            handleLogin(e) {
-                e.preventDefault();
-                const username = document.getElementById('username').value;
-                const password = document.getElementById('password').value;
-                
-                // Simple demo authentication
-                if (username === 'doctor' && password === '123456') {
-                    this.isLoggedIn = true;
-                    this.loginSection.style.display = 'none';
-                    this.mainContent.style.display = 'block';
-                    this.mainHeader.style.display = 'block';
-                    this.showSection('upload');
-                } else {
-                    alert('Invalid credentials. Use username: doctor, password: 123456');
-                }
-            }
+                    // Activate event
+                    self.addEventListener('activate', (event) => {
+                        console.log('[SW] Activating...');
+                        event.waitUntil(
+                            caches.keys().then((cacheNames) => {
+                                return Promise.all(
+                                    cacheNames.map((cacheName) => {
+                                        if (cacheName !== STATIC_CACHE && cacheName !== DYNAMIC_CACHE) {
+                                            console.log('[SW] Deleting old cache:', cacheName);
+                                            return caches.delete(cacheName);
+                                        }
+                                    })
+                                );
+                            }).then(() => {
+                                console.log('[SW] Claiming clients');
+                                return self.clients.claim();
+                            })
+                        );
+                    });
 
-            showSection(section) {
-                // Hide all sections
-                this.dashboardSection.style.display = 'none';
-                this.uploadSection.style.display = 'none';
-                this.resultsSection.style.display = 'none';
-                this.historySection.style.display = 'none';
-                
-                // Update navigation buttons
-                this.navButtons.forEach(btn => {
-                    btn.classList.remove('bg-red-600', 'text-white');
-                    btn.classList.add('text-gray-700', 'hover:bg-gray-100');
-                });
-                
-                // Show selected section
-                const activeBtn = document.querySelector(`[data-section="${section}"]`);
-                if (activeBtn) {
-                    activeBtn.classList.remove('text-gray-700', 'hover:bg-gray-100');
-                    activeBtn.classList.add('bg-red-600', 'text-white');
-                }
-                
-                switch(section) {
-                    case 'dashboard':
-                        this.dashboardSection.style.display = 'block';
-                        this.updateDashboardStats();
-                        break;
-                    case 'upload':
-                        this.uploadSection.style.display = 'block';
-                        break;
-                    case 'history':
-                        this.historySection.style.display = 'block';
-                        this.updateHistoryDisplay();
-                        break;
-                }
-                
-                this.currentSection = section;
-            }
+                    // Fetch event with advanced caching strategies
+                    self.addEventListener('fetch', (event) => {
+                        const { request } = event;
+                        const url = new URL(request.url);
 
-            handleDragOver(e) {
-                e.preventDefault();
-                this.uploadArea.classList.add('dragover');
-            }
+                        // Handle different types of requests
+                        if (request.method === 'GET') {
+                            // Static files - Cache First
+                            if (STATIC_FILES.includes(url.pathname) || url.pathname === '/') {
+                                event.respondWith(cacheFirst(request));
+                            }
+                            // Google Fonts - Cache First
+                            else if (url.origin === 'https://fonts.googleapis.com' || url.origin === 'https://fonts.gstatic.com') {
+                                event.respondWith(cacheFirst(request));
+                            }
+                            // Other requests - Network First
+                            else {
+                                event.respondWith(networkFirst(request));
+                            }
+                        }
+                    });
 
-            handleDragLeave(e) {
-                e.preventDefault();
-                this.uploadArea.classList.remove('dragover');
-            }
-
-            handleDrop(e) {
-                e.preventDefault();
-                this.uploadArea.classList.remove('dragover');
-                const files = e.dataTransfer.files;
-                if (files.length > 0) {
-                    this.processFile(files[0]);
-                }
-            }
-
-            handleFileSelect(e) {
-                const file = e.target.files[0];
-                if (file) {
-                    this.processFile(file);
-                }
-            }
-
-            processFile(file) {
-                if (!file.type.startsWith('image/')) {
-                    alert('Please select an image file');
-                    return;
-                }
-
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    this.uploadedImage.src = e.target.result;
-                    this.uploadedImage.style.display = 'block';
-                    this.imagePlaceholder.style.display = 'none';
-                    this.showResults();
-                    this.startAnalysis();
-                };
-                reader.readAsDataURL(file);
-            }
-
-            showResults() {
-                this.uploadSection.style.display = 'none';
-                this.resultsSection.style.display = 'block';
-                
-                // Update patient info
-                const now = new Date();
-                const patientId = 'P' + String(Math.floor(Math.random() * 100000)).padStart(5, '0');
-                this.patientInfo.textContent = `Patient ${patientId} • Analysis`;
-                this.analysisTime.textContent = `${now.toLocaleDateString('th-TH')} • ${now.toLocaleTimeString('th-TH', {hour: '2-digit', minute: '2-digit'})} • Processing...`;
-                
-                // Initialize current analysis
-                this.currentAnalysis = {
-                    id: Date.now(),
-                    patientId: patientId,
-                    timestamp: now,
-                    imageData: this.uploadedImage.src
-                };
-            }
-
-            startAnalysis() {
-                // Update status to analyzing
-                this.updateStatus('analyzing', 'Analyzing Image...');
-                this.detectionLabel.textContent = 'ANALYZING...';
-                this.detectionLabel.className = 'absolute top-4 right-4 bg-yellow-600 text-white px-3 py-2 rounded font-bold';
-                
-                // Reset confidence
-                this.updateConfidence(0, 'Processing...');
-                
-                // Simulate AI analysis process
-                this.simulateAnalysis();
-            }
-
-            simulateAnalysis() {
-                // Simulate processing time (2-5 seconds)
-                const processingTime = 2000 + Math.random() * 3000;
-                
-                // Show progress
-                let progress = 0;
-                const progressInterval = setInterval(() => {
-                    progress += Math.random() * 15;
-                    if (progress > 95) progress = 95;
-                    
-                    this.updateConfidence(progress, 'Analyzing...');
-                    this.confidenceLabel.innerHTML = `AI Confidence: <span class="font-bold text-yellow-400">${progress.toFixed(1)}%</span>`;
-                }, 200);
-
-                setTimeout(() => {
-                    clearInterval(progressInterval);
-                    this.completeAnalysis();
-                }, processingTime);
-            }
-
-            completeAnalysis() {
-                // Generate random results (simulate AI model output)
-                const results = this.generateAnalysisResults();
-                
-                // Update current analysis with results
-                this.currentAnalysis = {
-                    ...this.currentAnalysis,
-                    ...results,
-                    completedAt: new Date()
-                };
-                
-                // Update all UI elements with results
-                this.updateStatus(results.hasDetection ? 'detected' : 'normal', results.hasDetection ? 'CNV DETECTED' : 'NO CNV DETECTED');
-                this.updateConfidence(results.confidence, results.confidenceLevel);
-                this.updateDetectionResults(results);
-                this.updateRecommendations(results);
-                this.updateSummary(results);
-                
-                // Update labels
-                this.detectionLabel.textContent = results.hasDetection ? 'CNV DETECTED' : 'NORMAL';
-                this.detectionLabel.className = `absolute top-4 right-4 ${results.hasDetection ? 'bg-red-600' : 'bg-green-500'} text-white px-3 py-2 rounded font-bold`;
-                
-                this.confidenceLabel.innerHTML = `AI Confidence: <span class="font-bold text-green-400">${results.confidence.toFixed(1)}%</span>`;
-                
-                // Update analysis time
-                const now = new Date();
-                this.analysisTime.textContent = `${now.toLocaleDateString('th-TH')} • ${now.toLocaleTimeString('th-TH', {hour: '2-digit', minute: '2-digit'})} • Analysis completed`;
-                
-                // Enable download button
-                if (this.downloadBtn) this.downloadBtn.disabled = false;
-                if (this.summaryDownloadBtn) this.summaryDownloadBtn.disabled = false;
-                
-                // Save to history
-                this.saveToHistory(this.currentAnalysis);
-                
-                // Send push notification if supported
-                if (window.pwaManager) {
-                    const message = results.hasDetection ? 
-                        `CNV detected with ${results.confidence.toFixed(1)}% confidence` : 
-                        `Analysis complete - Normal result (${results.confidence.toFixed(1)}% confidence)`;
-                    window.pwaManager.showNotification(message, results.hasDetection ? 'warning' : 'success');
-                }
-                
-                // If offline, save to offline queue
-                if (window.pwaManager && !window.pwaManager.isOnline) {
-                    window.pwaManager.saveOfflineAnalysis(this.currentAnalysis);
-                }
-            }
-
-            generateAnalysisResults() {
-                // Simulate AI model results
-                const confidence = 70 + Math.random() * 30; // 70-100%
-                const hasDetection = Math.random() > 0.3; // 70% chance of detection
-                
-                const diseases = [
-                    'Choroidal Neovascularization (CNV)',
-                    'Diabetic Macular Edema',
-                    'Age-related Macular Degeneration',
-                    'Macular Hole',
-                    'Epiretinal Membrane'
-                ];
-                
-                const detectedDisease = hasDetection ? diseases[Math.floor(Math.random() * diseases.length)] : null;
-                
-                return {
-                    hasDetection,
-                    confidence,
-                    confidenceLevel: confidence > 90 ? 'High Confidence (>90%)' : confidence > 70 ? 'Medium Confidence (70-90%)' : 'Low Confidence (<70%)',
-                    detectedDisease,
-                    riskLevel: hasDetection ? (confidence > 85 ? 'High Risk' : 'Medium Risk') : 'Low Risk'
-                };
-            }
-
-            updateStatus(type, text) {
-                let statusClass = 'flex items-center space-x-2 px-4 py-2 rounded-full';
-                let dotClass = 'w-3 h-3 rounded-full animate-pulse';
-                
-                if (type === 'analyzing') {
-                    statusClass += ' bg-yellow-100';
-                    dotClass += ' bg-yellow-500';
-                    this.statusIndicator.innerHTML = `<div class="${dotClass}"></div><span class="text-yellow-800 font-medium">${text}</span>`;
-                } else if (type === 'detected') {
-                    statusClass += ' bg-red-100';
-                    dotClass += ' bg-red-500';
-                    this.statusIndicator.innerHTML = `<div class="${dotClass}"></div><span class="text-red-800 font-medium">${text}</span>`;
-                    this.resultStatus.innerHTML = `
-                        <p class="text-2xl font-bold text-red-600">CNV</p>
-                        <p class="text-sm text-gray-600">Positive</p>
-                    `;
-                } else if (type === 'normal') {
-                    statusClass += ' bg-green-100';
-                    dotClass += ' bg-green-500';
-                    this.statusIndicator.innerHTML = `<div class="${dotClass}"></div><span class="text-green-800 font-medium">${text}</span>`;
-                    this.resultStatus.innerHTML = `
-                        <p class="text-2xl font-bold text-green-600">NORMAL</p>
-                        <p class="text-sm text-gray-600">Negative</p>
-                    `;
-                }
-                
-                this.statusIndicator.className = statusClass;
-                
-                // Update analysis badge
-                if (type === 'analyzing') {
-                    this.analysisBadge.innerHTML = `<span class="text-yellow-600 text-sm font-medium">⏳ ${text}</span>`;
-                } else if (type === 'detected') {
-                    this.analysisBadge.innerHTML = `<span class="text-red-600 text-sm font-medium">⚠️ CNV Areas Detected</span>`;
-                } else {
-                    this.analysisBadge.innerHTML = `<span class="text-green-600 text-sm font-medium">✅ Normal Result</span>`;
-                }
-            }
-
-            updateConfidence(percentage, status) {
-                this.confidencePercentage.textContent = `${percentage.toFixed(1)}%`;
-                
-                // Update circle
-                const circumference = 2 * Math.PI * 45;
-                const offset = circumference - (percentage / 100) * circumference;
-                this.confidenceCircle.style.strokeDashoffset = offset;
-                
-                // Update status badge
-                let badgeClass = 'inline-flex items-center px-3 py-1 rounded-full text-sm font-medium';
-                let badgeText = status;
-                
-                if (percentage >= 90) {
-                    badgeClass += ' bg-green-100 text-green-800';
-                    badgeText = '✅ High Confidence (>90%)';
-                } else if (percentage >= 70) {
-                    badgeClass += ' bg-yellow-100 text-yellow-800';
-                    badgeText = '⚠️ Medium Confidence (70-90%)';
-                } else if (percentage > 0) {
-                    badgeClass += ' bg-red-100 text-red-800';
-                    badgeText = '⚠️ Low Confidence (<70%)';
-                } else {
-                    badgeClass += ' bg-gray-100 text-gray-800';
-                    badgeText = '⏳ Processing...';
-                }
-                
-                this.confidenceStatus.innerHTML = `
-                    <div class="${badgeClass}">${badgeText}</div>
-                    <p class="text-xs text-gray-600 mt-2">${percentage > 0 ? 'Analysis complete' : 'Analyzing image data'}</p>
-                `;
-            }
-
-            updateDetectionResults(results) {
-                let resultsHTML = '';
-                
-                if (results.hasDetection) {
-                    resultsHTML += `
-                        <div class="flex items-center justify-between p-3 bg-red-50 rounded-lg">
-                            <div>
-                                <p class="font-medium text-red-800">Disease Detected</p>
-                                <p class="text-sm text-red-600">${results.detectedDisease}</p>
-                            </div>
-                            <div class="w-3 h-3 bg-red-500 rounded-full"></div>
-                        </div>
-                    `;
-                    
-                    resultsHTML += `
-                        <div class="flex items-center justify-between p-3 bg-orange-50 rounded-lg">
-                            <div>
-                                <p class="font-medium text-orange-800">Risk Level</p>
-                                <p class="text-sm text-orange-600">${results.riskLevel}</p>
-                            </div>
-                            <div class="w-3 h-3 bg-orange-500 rounded-full"></div>
-                        </div>
-                    `;
-                } else {
-                    resultsHTML = `
-                        <div class="flex items-center justify-between p-3 bg-green-50 rounded-lg">
-                            <div>
-                                <p class="font-medium text-green-800">Analysis Result</p>
-                                <p class="text-sm text-green-600">No abnormalities detected</p>
-                            </div>
-                            <div class="w-3 h-3 bg-green-500 rounded-full"></div>
-                        </div>
-                    `;
-                }
-                
-                this.detectionResults.innerHTML = resultsHTML;
-            }
-
-            updateRecommendations(results) {
-                let recommendationsHTML = '';
-                
-                if (results.hasDetection) {
-                    if (results.confidence > 85) {
-                        recommendationsHTML += `
-                            <div class="p-3 bg-red-50 border-l-4 border-red-500 rounded">
-                                <p class="font-medium text-red-800 text-sm">🚨 Urgent Referral</p>
-                                <p class="text-xs text-red-600">Retina specialist consultation</p>
-                            </div>
-                        `;
+                    // Cache First Strategy
+                    async function cacheFirst(request) {
+                        try {
+                            const cachedResponse = await caches.match(request);
+                            if (cachedResponse) {
+                                return cachedResponse;
+                            }
+                            
+                            const networkResponse = await fetch(request);
+                            if (networkResponse.ok) {
+                                const cache = await caches.open(STATIC_CACHE);
+                                cache.put(request, networkResponse.clone());
+                            }
+                            return networkResponse;
+                        } catch (error) {
+                            console.log('[SW] Cache first failed:', error);
+                            return new Response('Offline - Content not available', {
+                                status: 503,
+                                statusText: 'Service Unavailable'
+                            });
+                        }
                     }
-                    
-                    if (results.detectedDisease.includes('CNV')) {
-                        recommendationsHTML += `
-                            <div class="p-3 bg-blue-50 border-l-4 border-blue-500 rounded">
-                                <p class="font-medium text-blue-800 text-sm">💉 Treatment Ready</p>
-                                <p class="text-xs text-blue-600">Anti-VEGF injection indicated</p>
-                            </div>
-                        `;
+
+                    // Network First Strategy
+                    async function networkFirst(request) {
+                        try {
+                            const networkResponse = await fetch(request);
+                            if (networkResponse.ok) {
+                                const cache = await caches.open(DYNAMIC_CACHE);
+                                cache.put(request, networkResponse.clone());
+                            }
+                            return networkResponse;
+                        } catch (error) {
+                            console.log('[SW] Network first failed, trying cache:', error);
+                            const cachedResponse = await caches.match(request);
+                            if (cachedResponse) {
+                                return cachedResponse;
+                            }
+                            return new Response('Offline - Content not available', {
+                                status: 503,
+                                statusText: 'Service Unavailable'
+                            });
+                        }
                     }
-                    
-                    recommendationsHTML += `
-                        <div class="p-3 bg-green-50 border-l-4 border-green-500 rounded">
-                            <p class="font-medium text-green-800 text-sm">📊 Report Generated</p>
-                            <p class="text-xs text-green-600">Ready for physician review</p>
-                        </div>
-                    `;
-                } else {
-                    recommendationsHTML = `
-                        <div class="p-3 bg-green-50 border-l-4 border-green-500 rounded">
-                            <p class="font-medium text-green-800 text-sm">✅ Normal Result</p>
-                            <p class="text-xs text-green-600">Continue routine examinations</p>
-                        </div>
-                    `;
-                }
-                
-                this.recommendationsList.innerHTML = recommendationsHTML;
-            }
 
-            updateSummary(results) {
-                if (results.hasDetection) {
-                    this.summaryTitle.textContent = '⚠️ CNV Detection Summary';
-                    this.summaryText.textContent = `${results.detectedDisease} detected with ${results.confidence.toFixed(1)}% confidence. ${results.confidence > 85 ? 'Immediate ophthalmologist consultation recommended.' : 'Further evaluation recommended.'}`;
-                } else {
-                    this.summaryTitle.textContent = '✅ Analysis Summary';
-                    this.summaryText.textContent = `No abnormalities detected with ${results.confidence.toFixed(1)}% confidence. Continue regular eye examinations as recommended by your healthcare provider.`;
-                }
-            }
+                    // Background sync for offline analysis queue
+                    self.addEventListener('sync', (event) => {
+                        if (event.tag === 'background-sync-analysis') {
+                            event.waitUntil(processOfflineAnalysis());
+                        }
+                    });
 
-            resetToUpload() {
-                // Show dashboard (Version 20 style) after clicking New Analysis
-                this.showSection('dashboard');
-                
-                // Reset form
-                this.imageInput.value = '';
-                this.uploadedImage.src = '';
-                this.uploadedImage.style.display = 'none';
-                this.imagePlaceholder.style.display = 'flex';
-                
-                // Reset status
-                this.statusIndicator.className = 'flex items-center space-x-2 bg-gray-100 px-4 py-2 rounded-full';
-                this.statusIndicator.innerHTML = `
-                    <div class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-                    <span class="text-gray-800 font-medium">Ready for Analysis</span>
+                    async function processOfflineAnalysis() {
+                        // Process queued analyses when back online
+                        console.log('[SW] Processing offline analysis queue');
+                        // Implementation would handle queued analysis requests
+                    }
+
+                    // Push notifications for analysis results
+                    self.addEventListener('push', (event) => {
+                        const options = {
+                            body: event.data ? event.data.text() : 'Analysis complete',
+                            icon: './icon-192x192.png',
+                            badge: './icon-72x72.png',
+                            vibrate: [200, 100, 200],
+                            data: {
+                                dateOfArrival: Date.now(),
+                                primaryKey: 1
+                            },
+                            actions: [
+                                {
+                                    action: 'view',
+                                    title: 'View Results',
+                                    icon: './icon-96x96.png'
+                                },
+                                {
+                                    action: 'close',
+                                    title: 'Close',
+                                    icon: './icon-96x96.png'
+                                }
+                            ]
+                        };
+
+                        event.waitUntil(
+                            self.registration.showNotification('OCT Analysis Complete', options)
+                        );
+                    });
+
+                    // Handle notification clicks
+                    self.addEventListener('notificationclick', (event) => {
+                        event.notification.close();
+
+                        if (event.action === 'view') {
+                            event.waitUntil(
+                                clients.openWindow('./?page=dashboard')
+                            );
+                        }
+                    });
+
+                    // Periodic background sync
+                    self.addEventListener('periodicsync', (event) => {
+                        if (event.tag === 'update-analysis-data') {
+                            event.waitUntil(updateAnalysisData());
+                        }
+                    });
+
+                    async function updateAnalysisData() {
+                        console.log('[SW] Updating analysis data in background');
+                        // Implementation would sync with server
+                    }
                 `;
-                
-                // Disable buttons
-                if (this.downloadBtn) this.downloadBtn.disabled = true;
-                if (this.summaryDownloadBtn) this.summaryDownloadBtn.disabled = true;
-                
-                // Reset confidence
-                this.updateConfidence(0, 'Ready for analysis');
-                
-                // Update dashboard stats
-                this.updateDashboardStats();
-            }
 
-            saveToHistory(analysis) {
-                this.patientHistory.unshift(analysis);
-                localStorage.setItem('octHistory', JSON.stringify(this.patientHistory));
-                this.updateDashboardStats();
-            }
+                const swBlob = new Blob([swCode], { type: 'application/javascript' });
+                const swURL = URL.createObjectURL(swBlob);
 
-            updateDashboardStats() {
-                const total = this.patientHistory.length;
-                const cnvCount = this.patientHistory.filter(a => a.hasDetection).length;
-                const normalCount = total - cnvCount;
-                const avgConf = total > 0 ? this.patientHistory.reduce((sum, a) => sum + (a.confidence || 0), 0) / total : 0;
-                
-                if (this.totalAnalyses) this.totalAnalyses.textContent = total;
-                if (this.cnvDetected) this.cnvDetected.textContent = cnvCount;
-                if (this.normalResults) this.normalResults.textContent = normalCount;
-                if (this.avgConfidence) this.avgConfidence.textContent = `${avgConf.toFixed(1)}%`;
-                
-                // Update recent analyses
-                this.updateRecentAnalyses();
-            }
-
-            updateRecentAnalyses() {
-                if (!this.recentAnalyses) return;
-                
-                const recent = this.patientHistory.slice(0, 5);
-                
-                if (recent.length === 0) {
-                    this.recentAnalyses.innerHTML = `
-                        <div class="text-center text-gray-500 py-8">
-                            <div class="text-4xl mb-2">📊</div>
-                            <p>No analyses yet. Start by uploading an OCT image.</p>
-                        </div>
-                    `;
-                    return;
-                }
-                
-                let html = '';
-                recent.forEach(analysis => {
-                    const date = new Date(analysis.timestamp).toLocaleDateString('th-TH');
-                    const time = new Date(analysis.timestamp).toLocaleTimeString('th-TH', {hour: '2-digit', minute: '2-digit'});
-                    
-                    html += `
-                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                            <div class="flex items-center space-x-4">
-                                <div class="w-12 h-12 bg-gray-200 rounded-lg overflow-hidden">
-                                    <img src="${analysis.imageData}" alt="OCT" class="w-full h-full object-cover">
-                                </div>
-                                <div>
-                                    <p class="font-medium text-gray-900">${analysis.patientId}</p>
-                                    <p class="text-sm text-gray-600">${date} • ${time}</p>
-                                </div>
-                            </div>
-                            <div class="text-right">
-                                <div class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${analysis.hasDetection ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'}">
-                                    ${analysis.hasDetection ? '⚠️ CNV' : '✅ Normal'}
-                                </div>
-                                <p class="text-sm text-gray-600 mt-1">${analysis.confidence?.toFixed(1)}% confidence</p>
-                            </div>
-                        </div>
-                    `;
-                });
-                
-                this.recentAnalyses.innerHTML = html;
-            }
-
-            updateHistoryDisplay() {
-                if (!this.historyList) return;
-                
-                let filteredHistory = [...this.patientHistory];
-                
-                // Apply filter
-                const filter = this.historyFilter?.value || 'all';
-                if (filter === 'cnv') {
-                    filteredHistory = filteredHistory.filter(a => a.hasDetection);
-                } else if (filter === 'normal') {
-                    filteredHistory = filteredHistory.filter(a => !a.hasDetection);
-                }
-                
-                // Apply sort
-                const sort = this.historySort?.value || 'newest';
-                if (sort === 'oldest') {
-                    filteredHistory.reverse();
-                } else if (sort === 'confidence') {
-                    filteredHistory.sort((a, b) => (b.confidence || 0) - (a.confidence || 0));
-                }
-                
-                if (filteredHistory.length === 0) {
-                    this.historyList.innerHTML = `
-                        <div class="text-center text-gray-500 py-12">
-                            <div class="text-6xl mb-4">📋</div>
-                            <p class="text-lg">No analysis history found</p>
-                            <p class="text-sm">Start analyzing OCT images to see history here</p>
-                        </div>
-                    `;
-                    return;
-                }
-                
-                let html = '';
-                filteredHistory.forEach(analysis => {
-                    const date = new Date(analysis.timestamp).toLocaleDateString('th-TH');
-                    const time = new Date(analysis.timestamp).toLocaleTimeString('th-TH', {hour: '2-digit', minute: '2-digit'});
-                    
-                    html += `
-                        <div class="bg-white rounded-xl shadow-sm p-6">
-                            <div class="flex items-start space-x-4">
-                                <div class="w-20 h-20 bg-gray-200 rounded-lg overflow-hidden flex-shrink-0">
-                                    <img src="${analysis.imageData}" alt="OCT" class="w-full h-full object-cover">
-                                </div>
-                                <div class="flex-1">
-                                    <div class="flex items-center justify-between mb-2">
-                                        <h3 class="text-lg font-semibold text-gray-900">${analysis.patientId}</h3>
-                                        <div class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${analysis.hasDetection ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'}">
-                                            ${analysis.hasDetection ? '⚠️ CNV Detected' : '✅ Normal'}
-                                        </div>
-                                    </div>
-                                    <p class="text-sm text-gray-600 mb-2">${date} • ${time}</p>
-                                    <div class="grid grid-cols-2 gap-4 text-sm">
-                                        <div>
-                                            <span class="text-gray-500">Confidence:</span>
-                                            <span class="font-medium">${analysis.confidence?.toFixed(1)}%</span>
-                                        </div>
-                                        <div>
-                                            <span class="text-gray-500">Risk Level:</span>
-                                            <span class="font-medium">${analysis.riskLevel || 'N/A'}</span>
-                                        </div>
-                                    </div>
-                                    ${analysis.detectedDisease ? `
-                                        <div class="mt-2 text-sm">
-                                            <span class="text-gray-500">Detected:</span>
-                                            <span class="font-medium text-red-600">${analysis.detectedDisease}</span>
-                                        </div>
-                                    ` : ''}
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                });
-                
-                this.historyList.innerHTML = html;
-            }
-
-            downloadReport() {
-                if (!this.currentAnalysis) return;
-                
-                // Generate and download report
-                const reportData = this.generateReportData();
-                const blob = new Blob([reportData], { type: 'text/plain' });
-                const url = URL.createObjectURL(blob);
-                
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `OCT_Analysis_Report_${this.currentAnalysis.patientId}_${new Date().toISOString().split('T')[0]}.txt`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-            }
-
-            generateReportData() {
-                if (!this.currentAnalysis) return '';
-                
-                const now = new Date();
-                return `
-OCT ANALYSIS REPORT
-==================
-
-Patient ID: ${this.currentAnalysis.patientId}
-Analysis Date: ${now.toLocaleDateString('th-TH')}
-Analysis Time: ${now.toLocaleTimeString('th-TH')}
-
-ANALYSIS RESULTS:
-- Status: ${this.currentAnalysis.hasDetection ? 'CNV DETECTED' : 'NORMAL'}
-- Confidence: ${this.currentAnalysis.confidence?.toFixed(1)}%
-- Risk Level: ${this.currentAnalysis.riskLevel}
-${this.currentAnalysis.detectedDisease ? `- Detected Disease: ${this.currentAnalysis.detectedDisease}` : ''}
-
-SUMMARY:
-${this.summaryText.textContent}
-
-RECOMMENDATIONS:
-${Array.from(this.recommendationsList.querySelectorAll('p')).filter(p => p.className.includes('font-medium')).map(el => '- ' + el.textContent).join('\n')}
-
-Generated by OCT Analysis System
-                `.trim();
-            }
-
-            clearHistory() {
-                if (confirm('Are you sure you want to clear all analysis history?')) {
-                    this.patientHistory = [];
-                    localStorage.removeItem('octHistory');
-                    this.updateDashboardStats();
-                    this.updateHistoryDisplay();
-                }
-            }
-        }
-
-        // Global functions
-        function showSection(section) {
-            if (window.octAnalyzer) {
-                window.octAnalyzer.showSection(section);
-            }
-        }
-
-        function logout() {
-            if (confirm('Are you sure you want to logout?')) {
-                location.reload();
-            }
-        }
-
-        function clearHistory() {
-            if (window.octAnalyzer) {
-                window.octAnalyzer.clearHistory();
-            }
-        }
-
-        // PWA Manager Class
-        class PWAManager {
-            constructor() {
-                this.deferredPrompt = null;
-                this.isOnline = navigator.onLine;
-                this.initializePWA();
-                this.setupEventListeners();
-            }
-
-            async initializePWA() {
-                // Register Service Worker
-                if ('serviceWorker' in navigator) {
-                    try {
-                        const registration = await navigator.serviceWorker.register(this.getServiceWorkerCode(), {
-                            type: 'module'
-                        });
-                        console.log('Service Worker registered:', registration);
+                navigator.serviceWorker.register(swURL)
+                    .then((registration) => {
+                        console.log('✅ Service Worker registered successfully:', registration.scope);
                         
                         // Check for updates
                         registration.addEventListener('updatefound', () => {
                             const newWorker = registration.installing;
                             newWorker.addEventListener('statechange', () => {
                                 if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                                    this.showUpdateNotification();
+                                    showUpdateAvailable();
                                 }
                             });
                         });
-                    } catch (error) {
-                        console.error('Service Worker registration failed:', error);
-                    }
-                }
-
-                // Setup install prompt
-                this.setupInstallPrompt();
-                
-                // Setup notifications
-                this.requestNotificationPermission();
-            }
-
-            getServiceWorkerCode() {
-                const swCode = `
-                    const CACHE_NAME = 'oct-analysis-v1.0.0';
-                    const urlsToCache = [
-                        '/',
-                        'https://cdn.tailwindcss.com',
-                        'https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap'
-                    ];
-
-                    // Install event - cache resources
-                    self.addEventListener('install', event => {
-                        event.waitUntil(
-                            caches.open(CACHE_NAME)
-                                .then(cache => {
-                                    console.log('Opened cache');
-                                    return cache.addAll(urlsToCache);
-                                })
-                        );
-                        self.skipWaiting();
+                    })
+                    .catch((error) => {
+                        console.error('❌ Service Worker registration failed:', error);
                     });
-
-                    // Fetch event - serve from cache when offline
-                    self.addEventListener('fetch', event => {
-                        event.respondWith(
-                            caches.match(event.request)
-                                .then(response => {
-                                    // Return cached version or fetch from network
-                                    if (response) {
-                                        return response;
-                                    }
-                                    return fetch(event.request).catch(() => {
-                                        // Return offline page for navigation requests
-                                        if (event.request.mode === 'navigate') {
-                                            return caches.match('/');
-                                        }
-                                    });
-                                })
-                        );
-                    });
-
-                    // Activate event - clean up old caches
-                    self.addEventListener('activate', event => {
-                        event.waitUntil(
-                            caches.keys().then(cacheNames => {
-                                return Promise.all(
-                                    cacheNames.map(cacheName => {
-                                        if (cacheName !== CACHE_NAME) {
-                                            return caches.delete(cacheName);
-                                        }
-                                    })
-                                );
-                            })
-                        );
-                        self.clients.claim();
-                    });
-
-                    // Background sync for offline analysis
-                    self.addEventListener('sync', event => {
-                        if (event.tag === 'background-sync') {
-                            event.waitUntil(doBackgroundSync());
-                        }
-                    });
-
-                    // Push notifications
-                    self.addEventListener('push', event => {
-                        const options = {
-                            body: event.data ? event.data.text() : 'Analysis complete!',
-                            icon: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTI4IiBoZWlnaHQ9IjEyOCIgdmlld0JveD0iMCAwIDEyOCAxMjgiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGdyYWRpZW50IGlkPSJhIiBjeD0iNjQiIGN5PSI2NCIgcj0iMjgiIGZ4PSIuMyIgZnk9Ii4zIiBmcHI9Ii4zIj48c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjMzc4ZGZmIi8+PC9ncmFkaWVudD48Y2lyY2xlIGN4PSI2NCIgY3k9IjY0IiByPSIyOCIgZmlsbD0idXJsKCNhKSIvPjx0ZXh0IHg9IjY0IiB5PSI3NiIgdHlhbmNob3I9Im1pZGRsZSIgZmlsbD0id2hpdGUiIGZvbnQtc2l6ZT0iMjAiIGZvbnQtd2VpZ2h0PSI3MDAiPjxzdmcgd2lkdGg9IjE2IiBoZWlnaHQ9IjE2IiB2aWV3Qm94PSIwIDAgMTYgMTYiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0ibTguMTYgNi4wNEM4LjE2IDIuNzIgMi43MiA4LjE2LTIuNzIgOC4xNlMxMy40NCA2LjA0IDguMTYgNi4wNHoiIGZpbGw9IiMzNzg3ZmYiLz48L3N2Zz48L3RleHQ+PC9kZWZzPjwvc3ZnPg==',
-                            badge: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTI4IiBoZWlnaHQ9IjEyOCIgdmlld0JveD0iMCAwIDEyOCAxMjgiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGdyYWRpZW50IGlkPSJhIiBjeD0iNjQiIGN5PSI2NCIgcj0iMjgiIGZ4PSIuMyIgZnk9Ii4zIiBmcHI9Ii4zIj48c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjMzc4ZGZmIi8+PC9ncmFkaWVudD48Y2lyY2xlIGN4PSI2NCIgY3k9IjY0IiByPSIyOCIgZmlsbD0idXJsKCNhKSIvPjx0ZXh0IHg9IjY0IiB5PSI3NiIgdHlhbmNob3I9Im1pZGRsZSIgZmlsbD0id2hpdGUiIGZvbnQtc2l6ZT0iMjAiIGZvbnQtd2VpZ2h0PSI3MDAiPjxzdmcgd2lkdGg9IjE2IiBoZWlnaHQ9IjE2IiB2aWV3Qm94PSIwIDAgMTYgMTYiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0ibTguMTYgNi4wNEM4LjE2IDIuNzIgMi43MiA4LjE2LTIuNzIgOC4xNlMxMy40NCA2LjA0IDguMTYgNi4wNHoiIGZpbGw9IiMzNzg3ZmYiLz48L3N2Zz48L3RleHQ+PC9kZWZzPjwvc3ZnPg==',
-                            vibrate: [100, 50, 100],
-                            data: {
-                                dateOfArrival: Date.now(),
-                                primaryKey: '2'
-                            },
-                            actions: [
-                                {
-                                    action: 'explore',
-                                    title: 'View Results',
-                                    icon: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTI4IiBoZWlnaHQ9IjEyOCIgdmlld0JveD0iMCAwIDEyOCAxMjgiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGdyYWRpZW50IGlkPSJhIiBjeD0iNjQiIGN5PSI2NCIgcj0iMjgiIGZ4PSIuMyIgZnk9Ii4zIiBmcHI9Ii4zIj48c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjMzc4ZGZmIi8+PC9ncmFkaWVudD48Y2lyY2xlIGN4PSI2NCIgY3k9IjY0IiByPSIyOCIgZmlsbD0idXJsKCNhKSIvPjx0ZXh0IHg9IjY0IiB5PSI3NiIgdHlhbmNob3I9Im1pZGRsZSIgZmlsbD0id2hpdGUiIGZvbnQtc2l6ZT0iMjAiIGZvbnQtd2VpZ2h0PSI3MDAiPjxzdmcgd2lkdGg9IjE2IiBoZWlnaHQ9IjE2IiB2aWV3Qm94PSIwIDAgMTYgMTYiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0ibTguMTYgNi4wNEM4LjE2IDIuNzIgMi43MiA4LjE2LTIuNzIgOC4xNlMxMy40NCA2LjA0IDguMTYgNi4wNHoiIGZpbGw9IiMzNzg3ZmYiLz48L3N2Zz48L3RleHQ+PC9kZWZzPjwvc3ZnPg=='
-                                },
-                                {
-                                    action: 'close',
-                                    title: 'Close',
-                                    icon: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTI4IiBoZWlnaHQ9IjEyOCIgdmlld0JveD0iMCAwIDEyOCAxMjgiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGdyYWRpZW50IGlkPSJhIiBjeD0iNjQiIGN5PSI2NCIgcj0iMjgiIGZ4PSIuMyIgZnk9Ii4zIiBmcHI9Ii4zIj48c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjMzc4ZGZmIi8+PC9ncmFkaWVudD48Y2lyY2xlIGN4PSI2NCIgY3k9IjY0IiByPSIyOCIgZmlsbD0idXJsKCNhKSIvPjx0ZXh0IHg9IjY0IiB5PSI3NiIgdHlhbmNob3I9Im1pZGRsZSIgZmlsbD0id2hpdGUiIGZvbnQtc2l6ZT0iMjAiIGZvbnQtd2VpZ2h0PSI3MDAiPjxzdmcgd2lkdGg9IjE2IiBoZWlnaHQ9IjE2IiB2aWV3Qm94PSIwIDAgMTYgMTYiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0ibTguMTYgNi4wNEM4LjE2IDIuNzIgMi43MiA4LjE2LTIuNzIgOC4xNlMxMy40NCA2LjA0IDguMTYgNi4wNHoiIGZpbGw9IiMzNzg3ZmYiLz48L3N2Zz48L3RleHQ+PC9kZWZzPjwvc3ZnPg=='
-                                }
-                            ]
-                        };
-
-                        event.waitUntil(
-                            self.registration.showNotification('OCT Analysis System', options)
-                        );
-                    });
-
-                    // Notification click handler
-                    self.addEventListener('notificationclick', event => {
-                        event.notification.close();
-
-                        if (event.action === 'explore') {
-                            event.waitUntil(
-                                clients.openWindow('/')
-                            );
-                        }
-                    });
-
-                    async function doBackgroundSync() {
-                        // Handle background sync for offline analysis
-                        console.log('Background sync triggered');
-                    }
-                `;
-                
-                const blob = new Blob([swCode], { type: 'application/javascript' });
-                return URL.createObjectURL(blob);
-            }
-
-            setupEventListeners() {
-                // Online/Offline status
-                window.addEventListener('online', () => {
-                    this.isOnline = true;
-                    this.hideOfflineNotification();
-                });
-
-                window.addEventListener('offline', () => {
-                    this.isOnline = false;
-                    this.showOfflineNotification();
-                });
-
-                // Install prompt
-                window.addEventListener('beforeinstallprompt', (e) => {
-                    e.preventDefault();
-                    this.deferredPrompt = e;
-                    this.showInstallButton();
-                });
-
-                // App installed
-                window.addEventListener('appinstalled', () => {
-                    this.hideInstallButton();
-                    this.showNotification('App installed successfully!', 'success');
-                });
-
-                // Update button
-                const updateBtn = document.getElementById('updateBtn');
-                if (updateBtn) {
-                    updateBtn.addEventListener('click', () => {
-                        this.updateApp();
-                    });
-                }
-            }
-
-            setupInstallPrompt() {
-                const installBtn = document.getElementById('installBtn');
-                if (installBtn) {
-                    installBtn.addEventListener('click', async () => {
-                        if (this.deferredPrompt) {
-                            this.deferredPrompt.prompt();
-                            const { outcome } = await this.deferredPrompt.userChoice;
-                            
-                            if (outcome === 'accepted') {
-                                this.showNotification('Installing app...', 'info');
-                            }
-                            
-                            this.deferredPrompt = null;
-                            this.hideInstallButton();
-                        }
-                    });
-                }
-            }
-
-            showInstallButton() {
-                const installBtn = document.getElementById('installBtn');
-                if (installBtn) {
-                    installBtn.style.display = 'block';
-                }
-            }
-
-            hideInstallButton() {
-                const installBtn = document.getElementById('installBtn');
-                if (installBtn) {
-                    installBtn.style.display = 'none';
-                }
-            }
-
-            showOfflineNotification() {
-                const notification = document.getElementById('offlineNotification');
-                if (notification) {
-                    notification.style.display = 'block';
-                }
-            }
-
-            hideOfflineNotification() {
-                const notification = document.getElementById('offlineNotification');
-                if (notification) {
-                    notification.style.display = 'none';
-                }
-            }
-
-            showUpdateNotification() {
-                const notification = document.getElementById('updateNotification');
-                if (notification) {
-                    notification.style.display = 'block';
-                }
-            }
-
-            hideUpdateNotification() {
-                const notification = document.getElementById('updateNotification');
-                if (notification) {
-                    notification.style.display = 'none';
-                }
-            }
-
-            async updateApp() {
-                if ('serviceWorker' in navigator) {
-                    const registration = await navigator.serviceWorker.getRegistration();
-                    if (registration && registration.waiting) {
-                        registration.waiting.postMessage({ type: 'SKIP_WAITING' });
-                        window.location.reload();
-                    }
-                }
-                this.hideUpdateNotification();
-            }
-
-            async requestNotificationPermission() {
-                if ('Notification' in window && 'serviceWorker' in navigator) {
-                    const permission = await Notification.requestPermission();
-                    if (permission === 'granted') {
-                        console.log('Notification permission granted');
-                    }
-                }
-            }
-
-            async showNotification(message, type = 'info') {
-                if ('serviceWorker' in navigator && 'Notification' in window) {
-                    const registration = await navigator.serviceWorker.getRegistration();
-                    if (registration && Notification.permission === 'granted') {
-                        const options = {
-                            body: message,
-                            icon: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTI4IiBoZWlnaHQ9IjEyOCIgdmlld0JveD0iMCAwIDEyOCAxMjgiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGdyYWRpZW50IGlkPSJhIiBjeD0iNjQiIGN5PSI2NCIgcj0iMjgiIGZ4PSIuMyIgZnk9Ii4zIiBmcHI9Ii4zIj48c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjMzc4ZGZmIi8+PC9ncmFkaWVudD48Y2lyY2xlIGN4PSI2NCIgY3k9IjY0IiByPSIyOCIgZmlsbD0idXJsKCNhKSIvPjx0ZXh0IHg9IjY0IiB5PSI3NiIgdHlhbmNob3I9Im1pZGRsZSIgZmlsbD0id2hpdGUiIGZvbnQtc2l6ZT0iMjAiIGZvbnQtd2VpZ2h0PSI3MDAiPjxzdmcgd2lkdGg9IjE2IiBoZWlnaHQ9IjE2IiB2aWV3Qm94PSIwIDAgMTYgMTYiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0ibTguMTYgNi4wNEM4LjE2IDIuNzIgMi43MiA4LjE2LTIuNzIgOC4xNlMxMy40NCA2LjA0IDguMTYgNi4wNHoiIGZpbGw9IiMzNzg3ZmYiLz48L3N2Zz48L3RleHQ+PC9kZWZzPjwvc3ZnPg==',
-                            badge: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTI4IiBoZWlnaHQ9IjEyOCIgdmlld0JveD0iMCAwIDEyOCAxMjgiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGdyYWRpZW50IGlkPSJhIiBjeD0iNjQiIGN5PSI2NCIgcj0iMjgiIGZ4PSIuMyIgZnk9Ii4zIiBmcHI9Ii4zIj48c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjMzc4ZGZmIi8+PC9ncmFkaWVudD48Y2lyY2xlIGN4PSI2NCIgY3k9IjY0IiByPSIyOCIgZmlsbD0idXJsKCNhKSIvPjx0ZXh0IHg9IjY0IiB5PSI3NiIgdHlhbmNob3I9Im1pZGRsZSIgZmlsbD0id2hpdGUiIGZvbnQtc2l6ZT0iMjAiIGZvbnQtd2VpZ2h0PSI3MDAiPjxzdmcgd2lkdGg9IjE2IiBoZWlnaHQ9IjE2IiB2aWV3Qm94PSIwIDAgMTYgMTYiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0ibTguMTYgNi4wNEM4LjE2IDIuNzIgMi43MiA4LjE2LTIuNzIgOC4xNlMxMy40NCA2LjA0IDguMTYgNi4wNHoiIGZpbGw9IiMzNzg3ZmYiLz48L3N2Zz48L3RleHQ+PC9kZWZzPjwvc3ZnPg==',
-                            vibrate: [200, 100, 200],
-                            tag: type
-                        };
-
-                        registration.showNotification('OCT Analysis System', options);
-                    }
-                }
-            }
-
-            // Offline storage for analysis queue
-            async saveOfflineAnalysis(analysisData) {
-                if ('indexedDB' in window) {
-                    const request = indexedDB.open('OCTAnalysisDB', 1);
-                    
-                    request.onupgradeneeded = (event) => {
-                        const db = event.target.result;
-                        if (!db.objectStoreNames.contains('offlineQueue')) {
-                            db.createObjectStore('offlineQueue', { keyPath: 'id', autoIncrement: true });
-                        }
-                    };
-
-                    request.onsuccess = (event) => {
-                        const db = event.target.result;
-                        const transaction = db.transaction(['offlineQueue'], 'readwrite');
-                        const store = transaction.objectStore('offlineQueue');
-                        store.add({
-                            ...analysisData,
-                            timestamp: Date.now(),
-                            status: 'pending'
-                        });
-                    };
-                }
-            }
-
-            async processOfflineQueue() {
-                if (!this.isOnline) return;
-
-                if ('indexedDB' in window) {
-                    const request = indexedDB.open('OCTAnalysisDB', 1);
-                    
-                    request.onsuccess = (event) => {
-                        const db = event.target.result;
-                        const transaction = db.transaction(['offlineQueue'], 'readwrite');
-                        const store = transaction.objectStore('offlineQueue');
-                        
-                        store.getAll().onsuccess = (event) => {
-                            const pendingAnalyses = event.target.result;
-                            pendingAnalyses.forEach(analysis => {
-                                if (analysis.status === 'pending') {
-                                    // Process the analysis
-                                    this.processAnalysis(analysis);
-                                    // Remove from queue
-                                    store.delete(analysis.id);
-                                }
-                            });
-                        };
-                    };
-                }
-            }
-
-            async processAnalysis(analysisData) {
-                // Simulate processing offline analysis when back online
-                console.log('Processing offline analysis:', analysisData);
-                await this.showNotification('Offline analysis processed successfully!', 'success');
             }
         }
 
-        // Initialize the application
-        document.addEventListener('DOMContentLoaded', () => {
-            window.octAnalyzer = new OCTAnalyzer();
-            window.pwaManager = new PWAManager();
+        function showUpdateAvailable() {
+            const updateBanner = document.createElement('div');
+            updateBanner.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                background: linear-gradient(135deg, #10b981, #059669);
+                color: white;
+                padding: 1rem;
+                text-align: center;
+                z-index: 10000;
+                box-shadow: 0 4px 20px rgba(16, 185, 129, 0.3);
+            `;
+            updateBanner.innerHTML = `
+                <div>🔄 New version available! <button onclick="location.reload()" style="background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 0.5rem 1rem; border-radius: 8px; margin-left: 1rem; cursor: pointer;">Update Now</button></div>
+            `;
+            document.body.insertBefore(updateBanner, document.body.firstChild);
+        }
+
+        // Online/Offline Status
+        function updateOnlineStatus() {
+            const indicator = document.getElementById('offlineIndicator');
+            if (navigator.onLine) {
+                indicator.style.display = 'none';
+            } else {
+                indicator.style.display = 'block';
+                indicator.textContent = '🔴 ออฟไลน์';
+                indicator.className = 'offline-indicator';
+            }
+        }
+
+        window.addEventListener('online', updateOnlineStatus);
+        window.addEventListener('offline', updateOnlineStatus);
+        updateOnlineStatus();
+
+        // Authentication
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if (username === 'doctor' && password === '123456') {
+                document.getElementById('loginPage').classList.remove('active');
+                document.getElementById('mainApp').classList.add('active');
+                updateDashboard();
+            } else {
+                alert('Invalid credentials. Use username: doctor, password: 123456');
+            }
+        }
+
+        function logout() {
+            document.getElementById('mainApp').classList.remove('active');
+            document.getElementById('loginPage').classList.add('active');
+            document.getElementById('username').value = 'doctor';
+            document.getElementById('password').value = '123456';
+        }
+
+        // Navigation
+        function showPage(pageName) {
+            // Update nav tabs
+            document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Update page content
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.getElementById(pageName + 'Page').classList.add('active');
+            
+            if (pageName === 'dashboard') {
+                updateDashboard();
+            } else if (pageName === 'patientHistory') {
+                updateHistory();
+            } else if (pageName === 'newAnalysis') {
+                // Reset to ready state when clicking New Analysis
+                newAnalysis();
+            }
+        }
+
+        // Dashboard Functions
+        function updateDashboard() {
+            updateStatistics();
+            updateRecentAnalyses();
+            updateAnalysisHistory();
+        }
+
+        function updateStatistics() {
+            const total = analysisHistory.length;
+            const cnvCount = analysisHistory.filter(a => a.hasDetection).length;
+            const normalCount = total - cnvCount;
+            const avgConfidence = total > 0 ? 
+                (analysisHistory.reduce((sum, a) => sum + a.confidence, 0) / total).toFixed(1) : 0;
+
+            document.getElementById('totalAnalyses').textContent = total;
+            document.getElementById('cnvDetected').textContent = cnvCount;
+            document.getElementById('normalResults').textContent = normalCount;
+            document.getElementById('avgConfidence').textContent = avgConfidence + '%';
+        }
+
+        function updateRecentAnalyses() {
+            const container = document.getElementById('recentAnalyses');
+            const recent = analysisHistory.slice(0, 5); // Show last 5 analyses
+            
+            if (recent.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: rgba(255,255,255,0.7); padding: 2rem;">📊 No recent analyses available</p>';
+                return;
+            }
+            
+            container.innerHTML = recent.map(analysis => `
+                <div class="history-item" onclick="showAnalysisDetails('${analysis.id}')" style="margin-bottom: 1rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <strong>${analysis.hasDetection ? '⚠️' : '✅'} ${analysis.patientId} - ${analysis.eyeSide}</strong><br>
+                            <small>Exam: ${new Date(analysis.examDate).toLocaleDateString('th-TH')} • Analysis: ${new Date(analysis.timestamp).toLocaleDateString('th-TH')}</small>
+                        </div>
+                        <div style="text-align: right;">
+                            <span style="font-weight: bold; color: ${analysis.hasDetection ? '#dc2626' : '#059669'};">
+                                ${analysis.hasDetection ? 'CNV Detected' : 'Normal'}
+                            </span><br>
+                            <small>${analysis.confidence.toFixed(1)}% confidence • ${analysis.riskLevel}</small>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateAnalysisHistory() {
+            const container = document.getElementById('analysisHistoryList');
+            
+            if (analysisHistory.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: rgba(255,255,255,0.7); padding: 2rem;">📈 Analysis history will appear here</p>';
+                return;
+            }
+            
+            container.innerHTML = analysisHistory.map(analysis => `
+                <div class="history-item" onclick="showAnalysisDetails('${analysis.id}')" style="margin-bottom: 1rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <strong>${analysis.hasDetection ? '⚠️' : '✅'} ${analysis.patientId} - ${analysis.eyeSide}</strong><br>
+                            <small>Exam: ${new Date(analysis.examDate).toLocaleDateString('th-TH')} • Analysis: ${new Date(analysis.timestamp).toLocaleDateString('th-TH')}</small>
+                        </div>
+                        <div style="text-align: right;">
+                            <span style="font-weight: bold; color: ${analysis.hasDetection ? '#dc2626' : '#059669'};">
+                                ${analysis.hasDetection ? 'CNV Detected' : 'Normal'}
+                            </span><br>
+                            <small>${analysis.confidence.toFixed(1)}% confidence • ${analysis.riskLevel}</small>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // File Upload Functions
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                displayImagePreview(file);
+            }
+        }
+
+        function displayImagePreview(file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                // Store image data for analysis
+                currentAnalysis = {
+                    imageData: e.target.result,
+                    fileName: file.name,
+                    fileSize: file.size,
+                    fileType: file.type
+                };
+                
+                // Set today's date as default
+                document.getElementById('examDate').value = new Date().toISOString().split('T')[0];
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Patient Information Functions
+        function submitPatientInfo() {
+            // Validate required fields
+            const patientId = document.getElementById('patientId').value.trim();
+            const eyeSide = document.getElementById('eyeSide').value;
+            const examDate = document.getElementById('examDate').value;
+            
+            if (!patientId || !eyeSide || !examDate) {
+                alert('⚠️ กรุณากรอกข้อมูลให้ครบถ้วน\n\nข้อมูลที่จำเป็น:\n- รหัสผู้ป่วย\n- ข้างของตา\n- วันที่ตรวจ');
+                return;
+            }
+            
+            // Show confirmation modal with patient data
+            showAnalysisConfirmModal(patientId, eyeSide, examDate);
+        }
+
+        function showAnalysisConfirmModal(patientId, eyeSide, examDate) {
+            const eyeSideText = eyeSide === 'OD' ? 'OD (ตาขวา)' : 'OS (ตาซ้าย)';
+            const formattedDate = new Date(examDate).toLocaleDateString('th-TH', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            
+            document.getElementById('confirmPatientData').innerHTML = `
+                <div style="display: grid; gap: 0.75rem;">
+                    <div><strong style="color: #1f2937;">รหัสผู้ป่วย:</strong> <span style="color: #3b82f6; font-weight: 600;">${patientId}</span></div>
+                    <div><strong style="color: #1f2937;">ข้างของตา:</strong> <span style="color: #3b82f6; font-weight: 600;">${eyeSideText}</span></div>
+                    <div><strong style="color: #1f2937;">วันที่ตรวจ:</strong> <span style="color: #3b82f6; font-weight: 600;">${formattedDate}</span></div>
+                </div>
+            `;
+            
+            document.getElementById('analysisConfirmModal').classList.add('show');
+        }
+
+        function hideAnalysisConfirmModal() {
+            document.getElementById('analysisConfirmModal').classList.remove('show');
+        }
+
+        function confirmStartAnalysis() {
+            hideAnalysisConfirmModal();
+            startAnalysisWithOfflineSupport();
+        }
+
+        function startAnalysisWithOfflineSupport() {
+            // Get patient data from form
+            const patientId = document.getElementById('patientId').value.trim();
+            const eyeSide = document.getElementById('eyeSide').value;
+            const examDate = document.getElementById('examDate').value;
+            
+            // Show progress
+            document.getElementById('analysisProgress').style.display = 'block';
+            document.getElementById('patientInfoForm').style.display = 'none';
+            document.getElementById('uploadSection').style.display = 'none';
+            
+            // Simulate analysis progress
+            let progress = 0;
+            const progressInterval = setInterval(() => {
+                progress += Math.random() * 10;
+                if (progress > 100) progress = 100;
+                
+                document.getElementById('progressBar').style.width = progress + '%';
+                document.getElementById('progressText').textContent = `🔍 Analyzing... ${Math.floor(progress)}%`;
+                
+                if (progress >= 100) {
+                    clearInterval(progressInterval);
+                    setTimeout(() => {
+                        completeAnalysisWithOfflineSupport(patientId, eyeSide, examDate);
+                    }, 500);
+                }
+            }, 100);
+        }
+
+        // Drag and Drop
+        const uploadArea = document.querySelector('.upload-area');
+        
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+        
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+        
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                displayImagePreview(files[0]);
+            }
+        });
+
+        // Analysis Functions
+        function startAnalysis() {
+            // Get patient data from form
+            const patientId = document.getElementById('patientId').value.trim();
+            const eyeSide = document.getElementById('eyeSide').value;
+            const examDate = document.getElementById('examDate').value;
+            
+            // Show progress
+            document.getElementById('analysisProgress').style.display = 'block';
+            document.getElementById('patientInfoForm').style.display = 'none';
+            document.getElementById('uploadSection').style.display = 'none';
+            
+            // Simulate analysis progress
+            let progress = 0;
+            const progressInterval = setInterval(() => {
+                progress += Math.random() * 10;
+                if (progress > 100) progress = 100;
+                
+                document.getElementById('progressBar').style.width = progress + '%';
+                document.getElementById('progressText').textContent = `🔍 Analyzing... ${Math.floor(progress)}%`;
+                
+                if (progress >= 100) {
+                    clearInterval(progressInterval);
+                    setTimeout(() => {
+                        completeAnalysis(patientId, eyeSide, examDate);
+                    }, 500);
+                }
+            }, 100);
+        }
+
+        function completeAnalysis(patientId, eyeSide, examDate) {
+            // Generate random results
+            const confidence = 70 + Math.random() * 30;
+            const hasDetection = Math.random() > 0.3;
+            
+            const diseases = [
+                'Choroidal Neovascularization (CNV)',
+                'Diabetic Macular Edema',
+                'Age-related Macular Degeneration',
+                'Macular Hole',
+                'Epiretinal Membrane'
+            ];
+            
+            const result = {
+                id: generateUUID(),
+                patientId: patientId,
+                eyeSide: eyeSide,
+                examDate: examDate,
+                timestamp: new Date().toISOString(),
+                hasDetection: hasDetection,
+                confidence: confidence,
+                detectedDisease: hasDetection ? diseases[Math.floor(Math.random() * diseases.length)] : null,
+                riskLevel: hasDetection && confidence > 85 ? 'High Risk' : hasDetection ? 'Medium Risk' : 'Low Risk',
+                imageData: currentAnalysis ? currentAnalysis.imageData : 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iIzMzMzMzMyIvPjx0ZXh0IHg9IjEwMCIgeT0iMTAwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iLjNlbSI+T0NUIEltYWdlPC90ZXh0Pjwvc3ZnPg==',
+                fileName: currentAnalysis ? currentAnalysis.fileName : 'oct_analysis.jpg'
+            };
+            
+            // Save to history
+            analysisHistory.unshift(result);
+            localStorage.setItem('octAnalysisHistory', JSON.stringify(analysisHistory));
+            
+            // Hide all previous sections and show only results
+            document.getElementById('uploadSection').style.display = 'none';
+            document.getElementById('patientInfoForm').style.display = 'none';
+            document.getElementById('analysisProgress').style.display = 'none';
+            document.getElementById('analysisResults').style.display = 'block';
+            displayResults(result);
+        }
+
+        function displayResults(result) {
+            const resultsContainer = document.getElementById('analysisResults');
+            const resultClass = result.hasDetection ? 'cnv-detected' : 'normal-result';
+            
+            resultsContainer.innerHTML = `
+                <h2>📊 Analysis Results</h2>
+                
+                <div class="result-card ${resultClass}">
+                    <h3>${result.hasDetection ? '⚠️ CNV DETECTED' : '✅ NORMAL RESULT'}</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 1rem 0;">
+                        <p><strong>Patient ID:</strong> ${result.patientId}</p>
+                        <p><strong>Eye Side:</strong> ${result.eyeSide}</p>
+                        <p><strong>Exam Date:</strong> ${new Date(result.examDate).toLocaleDateString('th-TH')}</p>
+                    </div>
+                    ${result.hasDetection ? `<p><strong>Disease:</strong> ${result.detectedDisease}</p>` : '<p><strong>Status:</strong> No abnormalities detected</p>'}
+                    <p><strong>Risk Level:</strong> ${result.riskLevel}</p>
+                    <p><strong>Confidence:</strong> ${result.confidence.toFixed(1)}%</p>
+                </div>
+                
+                <div style="text-align: center; margin-top: 2rem;">
+                    <button onclick="analyseMore()" class="btn" style="padding: 1.5rem 4rem; font-size: 1.2rem; font-weight: 700;">
+                        🔄 Analyze More
+                    </button>
+                </div>
+            `;
+        }
+
+        // History Functions
+        function updateHistory() {
+            const container = document.getElementById('historyResults');
+            container.innerHTML = '<p style="text-align: center; color: rgba(255,255,255,0.7); padding: 2rem;">🔍 Use the search filters above to find analysis results.</p>';
+        }
+
+        function filterHistory() {
+            const patientId = document.getElementById('searchPatientId').value.toLowerCase();
+            const dateFrom = document.getElementById('searchDateFrom').value;
+            const resultType = document.getElementById('searchResultType').value;
+            
+            let filteredResults = analysisHistory;
+            
+            // Filter by patient ID
+            if (patientId) {
+                filteredResults = filteredResults.filter(analysis => 
+                    analysis.patientId.toLowerCase().includes(patientId)
+                );
+            }
+            
+            // Filter by date
+            if (dateFrom) {
+                filteredResults = filteredResults.filter(analysis => 
+                    analysis.examDate >= dateFrom
+                );
+            }
+            
+            // Filter by result type
+            if (resultType === 'cnv') {
+                filteredResults = filteredResults.filter(analysis => analysis.hasDetection);
+            } else if (resultType === 'normal') {
+                filteredResults = filteredResults.filter(analysis => !analysis.hasDetection);
+            }
+            
+            // Display results
+            const container = document.getElementById('historyResults');
+            
+            if (filteredResults.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: rgba(255,255,255,0.7); padding: 2rem;">❌ No results found matching your criteria.</p>';
+                return;
+            }
+            
+            container.innerHTML = filteredResults.map(analysis => `
+                <div class="history-item" onclick="showAnalysisDetails('${analysis.id}')" style="margin-bottom: 1rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <strong>${analysis.hasDetection ? '⚠️' : '✅'} ${analysis.patientId} - ${analysis.eyeSide}</strong><br>
+                            <small>Exam: ${new Date(analysis.examDate).toLocaleDateString('th-TH')} • Analysis: ${new Date(analysis.timestamp).toLocaleDateString('th-TH')}</small>
+                        </div>
+                        <div style="text-align: right;">
+                            <span style="font-weight: bold; color: ${analysis.hasDetection ? '#dc2626' : '#059669'};">
+                                ${analysis.hasDetection ? 'CNV Detected' : 'Normal'}
+                            </span><br>
+                            <small>${analysis.confidence.toFixed(1)}% confidence • ${analysis.riskLevel}</small>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function showAnalysisDetails(analysisId) {
+            const analysis = analysisHistory.find(a => a.id === analysisId);
+            if (analysis) {
+                // Switch to new analysis page and show results
+                document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
+                document.querySelector('.nav-tab[onclick="showPage(\'newAnalysis\')"]').classList.add('active');
+                
+                document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+                document.getElementById('newAnalysisPage').classList.add('active');
+                
+                // Hide all sections except results
+                document.getElementById('uploadSection').style.display = 'none';
+                document.getElementById('patientInfoForm').style.display = 'none';
+                document.getElementById('analysisProgress').style.display = 'none';
+                document.getElementById('analysisResults').style.display = 'block';
+                displayResults(analysis);
+            }
+        }
+
+        function clearHistory() {
+            showConfirmModal();
+        }
+
+        function showConfirmModal() {
+            document.getElementById('confirmModal').classList.add('show');
+        }
+
+        function hideConfirmModal() {
+            document.getElementById('confirmModal').classList.remove('show');
+        }
+
+        function confirmClearHistory() {
+            analysisHistory = [];
+            localStorage.setItem('octAnalysisHistory', JSON.stringify(analysisHistory));
+            updateDashboard();
+            updateHistory();
+            hideConfirmModal();
+            showSuccessMessage();
+        }
+
+        function showSuccessMessage() {
+            const successMsg = document.getElementById('successMessage');
+            successMsg.classList.add('show');
+            setTimeout(() => {
+                successMsg.classList.remove('show');
+            }, 3000);
+        }
+
+        // Utility Functions
+        function generateUUID() {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                const r = Math.random() * 16 | 0;
+                const v = c == 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+        }
+
+        function downloadReport(analysisId) {
+            const analysis = analysisHistory.find(a => a.id === analysisId);
+            if (!analysis) return;
+            
+            const report = generateReport(analysis);
+            const blob = new Blob([report], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `OCT_Analysis_Report_${analysis.patientId}_${new Date(analysis.timestamp).toISOString().split('T')[0]}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function generateReport(result) {
+            return `
+OCT ANALYSIS REPORT
+==================
+
+PATIENT INFORMATION:
+- Patient ID: ${result.patientId}
+- Analysis ID: ${result.id}
+- Analysis Date: ${new Date(result.timestamp).toLocaleDateString('th-TH')}
+- Analysis Time: ${new Date(result.timestamp).toLocaleTimeString('th-TH')}
+
+ANALYSIS RESULTS:
+- Status: ${result.hasDetection ? 'CNV DETECTED' : 'NORMAL'}
+- Confidence Level: ${result.confidence.toFixed(1)}%
+- Risk Assessment: ${result.riskLevel}
+${result.detectedDisease ? `- Detected Condition: ${result.detectedDisease}` : ''}
+
+CONFIDENCE INTERPRETATION:
+${result.confidence > 90 ? 'High Confidence (>90%) - Results are highly reliable' : 
+  result.confidence > 70 ? 'Medium Confidence (70-90%) - Results are moderately reliable' : 
+  'Low Confidence (<70%) - Results require additional verification'}
+
+CLINICAL SUMMARY:
+${result.hasDetection ? result.detectedDisease + ' detected' : 'No abnormalities detected'} with ${result.confidence.toFixed(1)}% confidence.
+
+RECOMMENDATIONS:
+${result.hasDetection && result.confidence > 85 ? '- URGENT: Immediate referral to retina specialist' : 
+  result.hasDetection ? '- Further evaluation by ophthalmologist recommended' : 
+  '- Continue routine eye examinations'}
+${result.detectedDisease && result.detectedDisease.includes('CNV') ? '- Consider anti-VEGF injection therapy' : ''}
+- Follow institutional protocols for patient care
+- Document findings in patient medical record
+
+TECHNICAL DETAILS:
+- AI Model: OCT Analysis System v1.0
+- Processing Method: Deep Learning CNN
+- Image Quality: Acceptable for analysis
+- Analysis Duration: ~2-3 seconds
+
+DISCLAIMER:
+This AI-generated report is intended to assist healthcare professionals 
+in clinical decision-making. Final diagnosis and treatment decisions 
+should always be made by qualified medical practitioners based on 
+comprehensive clinical evaluation.
+
+Generated by OCT Analysis System
+Report Date: ${new Date().toLocaleString('th-TH')}
+            `.trim();
+        }
+
+        function newAnalysis() {
+            // Reset to ready state - show upload section and patient form
+            document.getElementById('uploadSection').style.display = 'block';
+            document.getElementById('patientInfoForm').style.display = 'block';
+            document.getElementById('analysisProgress').style.display = 'none';
+            document.getElementById('analysisResults').style.display = 'none';
+            document.getElementById('fileInput').value = '';
+            document.getElementById('patientId').value = '';
+            document.getElementById('eyeSide').value = '';
+            document.getElementById('examDate').value = '';
+            currentAnalysis = null;
+        }
+
+        function analyseMore() {
+            // Same as newAnalysis - reset to upload state and show patient form
+            newAnalysis();
+        }
+
+        // Offline Analysis Queue
+        let offlineAnalysisQueue = JSON.parse(localStorage.getItem('offlineAnalysisQueue') || '[]');
+
+        function queueOfflineAnalysis(analysisData) {
+            offlineAnalysisQueue.push({
+                ...analysisData,
+                queuedAt: new Date().toISOString(),
+                status: 'queued'
+            });
+            localStorage.setItem('offlineAnalysisQueue', JSON.stringify(offlineAnalysisQueue));
+            
+            // Register background sync if available
+            if ('serviceWorker' in navigator && 'sync' in window.ServiceWorkerRegistration.prototype) {
+                navigator.serviceWorker.ready.then((registration) => {
+                    return registration.sync.register('background-sync-analysis');
+                });
+            }
+        }
+
+        function processOfflineQueue() {
+            if (navigator.onLine && offlineAnalysisQueue.length > 0) {
+                console.log('Processing offline analysis queue...');
+                // Process queued analyses
+                offlineAnalysisQueue.forEach((queuedAnalysis, index) => {
+                    if (queuedAnalysis.status === 'queued') {
+                        // Simulate processing
+                        setTimeout(() => {
+                            offlineAnalysisQueue[index].status = 'processed';
+                            localStorage.setItem('offlineAnalysisQueue', JSON.stringify(offlineAnalysisQueue));
+                        }, index * 1000);
+                    }
+                });
+            }
+        }
+
+        // Enhanced PWA Features
+        function requestNotificationPermission() {
+            if ('Notification' in window && navigator.serviceWorker) {
+                Notification.requestPermission().then((permission) => {
+                    if (permission === 'granted') {
+                        console.log('✅ Notification permission granted');
+                    }
+                });
+            }
+        }
+
+        function showNotification(title, options = {}) {
+            if ('Notification' in window && Notification.permission === 'granted') {
+                if ('serviceWorker' in navigator) {
+                    navigator.serviceWorker.ready.then((registration) => {
+                        registration.showNotification(title, {
+                            body: options.body || 'OCT Analysis System',
+                            icon: generateIcon(192),
+                            badge: generateIcon(72),
+                            vibrate: [200, 100, 200],
+                            data: options.data || {},
+                            actions: options.actions || [],
+                            ...options
+                        });
+                    });
+                } else {
+                    new Notification(title, {
+                        body: options.body || 'OCT Analysis System',
+                        icon: generateIcon(192),
+                        ...options
+                    });
+                }
+            }
+        }
+
+        // Enhanced offline detection
+        function updateOnlineStatus() {
+            const indicator = document.getElementById('offlineIndicator');
+            if (navigator.onLine) {
+                indicator.style.display = 'none';
+                processOfflineQueue();
+            } else {
+                indicator.style.display = 'block';
+                indicator.textContent = '🔴 ออฟไลน์ - ข้อมูลจะถูกบันทึกไว้';
+                indicator.className = 'offline-indicator';
+            }
+        }
+
+        // Enhanced analysis function with offline support
+        function completeAnalysisWithOfflineSupport(patientId, eyeSide, examDate) {
+            const analysisData = {
+                patientId,
+                eyeSide,
+                examDate,
+                imageData: currentAnalysis ? currentAnalysis.imageData : null
+            };
+
+            if (!navigator.onLine) {
+                // Queue for offline processing
+                queueOfflineAnalysis(analysisData);
+                
+                // Show offline message
+                document.getElementById('analysisProgress').style.display = 'none';
+                document.getElementById('analysisResults').innerHTML = `
+                    <div class="card" style="text-align: center; padding: 3rem;">
+                        <h3>📱 ออฟไลน์โหมด</h3>
+                        <p style="margin: 1.5rem 0;">การวิเคราะห์ของคุณได้ถูกบันทึกไว้แล้ว</p>
+                        <p style="color: rgba(255,255,255,0.8);">เมื่อเชื่อมต่ออินเทอร์เน็ตแล้ว ระบบจะประมวลผลโดยอัตโนมัติ</p>
+                        <button onclick="newAnalysis()" class="btn" style="margin-top: 2rem;">
+                            🔄 วิเคราะห์ใหม่
+                        </button>
+                    </div>
+                `;
+                document.getElementById('analysisResults').style.display = 'block';
+                return;
+            }
+
+            // Online processing
+            completeAnalysis(patientId, eyeSide, examDate);
+        }
+
+        // App shortcuts handling
+        function handleAppShortcuts() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const page = urlParams.get('page');
+            
+            if (page && document.getElementById('mainApp').classList.contains('active')) {
+                // Auto-login for shortcuts (in real app, you'd check auth state)
+                setTimeout(() => {
+                    if (page === 'newAnalysis') {
+                        showPage('newAnalysis');
+                    } else if (page === 'patientHistory') {
+                        showPage('patientHistory');
+                    }
+                }, 100);
+            }
+        }
+
+        // Enhanced install prompt
+        function enhancedInstallPrompt() {
+            const installBtn = document.getElementById('installBtn');
+            
+            // Show install button with better messaging
+            if (deferredPrompt) {
+                installBtn.innerHTML = '📱 ติดตั้งแอป OCT Analysis';
+                installBtn.style.display = 'block';
+                
+                // Auto-show install prompt after user interaction
+                let userInteracted = false;
+                document.addEventListener('click', () => {
+                    if (!userInteracted && deferredPrompt) {
+                        userInteracted = true;
+                        setTimeout(() => {
+                            if (deferredPrompt) {
+                                showInstallBanner();
+                            }
+                        }, 5000); // Show after 5 seconds of interaction
+                    }
+                }, { once: true });
+            }
+        }
+
+        function showInstallBanner() {
+            const banner = document.createElement('div');
+            banner.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                left: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+                color: white;
+                padding: 1rem;
+                border-radius: 16px;
+                box-shadow: 0 8px 32px rgba(59, 130, 246, 0.3);
+                z-index: 9999;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                animation: slideUp 0.4s ease;
+            `;
+            
+            banner.innerHTML = `
+                <div>
+                    <strong>📱 ติดตั้ง OCT Analysis</strong><br>
+                    <small>เข้าถึงได้ง่ายขึ้นจากหน้าจอหลัก</small>
+                </div>
+                <div>
+                    <button onclick="this.parentElement.parentElement.remove()" style="background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 0.5rem; border-radius: 8px; margin-right: 0.5rem; cursor: pointer;">ปิด</button>
+                    <button onclick="document.getElementById('installBtn').click(); this.parentElement.parentElement.remove();" style="background: rgba(255,255,255,0.9); border: none; color: #1d4ed8; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 600; cursor: pointer;">ติดตั้ง</button>
+                </div>
+            `;
+            
+            document.body.appendChild(banner);
+            
+            // Auto-remove after 10 seconds
+            setTimeout(() => {
+                if (banner.parentElement) {
+                    banner.remove();
+                }
+            }, 10000);
+        }
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            // Setup PWA
+            setupPWA();
+            registerServiceWorker();
+            requestNotificationPermission();
+            
+            updateOnlineStatus();
+            handleAppShortcuts();
+            enhancedInstallPrompt();
+            
+            // Add sample data if no history exists
+            if (analysisHistory.length === 0) {
+                const sampleData = [
+                    {
+                        id: generateUUID(),
+                        patientId: 'P12345',
+                        eyeSide: 'OD',
+                        examDate: new Date(Date.now() - 86400000).toISOString().split('T')[0],
+                        timestamp: new Date(Date.now() - 86400000).toISOString(), // 1 day ago
+                        hasDetection: true,
+                        confidence: 92.5,
+                        detectedDisease: 'Choroidal Neovascularization (CNV)',
+                        riskLevel: 'High Risk',
+                        imageData: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iIzMzMzMzMyIvPjx0ZXh0IHg9IjEwMCIgeT0iMTAwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iLjNlbSI+T0NUIEltYWdlPC90ZXh0Pjwvc3ZnPg==',
+                        fileName: 'oct_sample_1.jpg'
+                    },
+                    {
+                        id: generateUUID(),
+                        patientId: 'P67890',
+                        eyeSide: 'OS',
+                        examDate: new Date(Date.now() - 172800000).toISOString().split('T')[0],
+                        timestamp: new Date(Date.now() - 172800000).toISOString(), // 2 days ago
+                        hasDetection: false,
+                        confidence: 87.3,
+                        detectedDisease: null,
+                        riskLevel: 'Low Risk',
+                        imageData: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iIzMzMzMzMyIvPjx0ZXh0IHg9IjEwMCIgeT0iMTAwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iLjNlbSI+T0NUIEltYWdlPC90ZXh0Pjwvc3ZnPg==',
+                        fileName: 'oct_sample_2.jpg'
+                    },
+                    {
+                        id: generateUUID(),
+                        patientId: 'P11111',
+                        eyeSide: 'OD',
+                        examDate: new Date(Date.now() - 259200000).toISOString().split('T')[0],
+                        timestamp: new Date(Date.now() - 259200000).toISOString(), // 3 days ago
+                        hasDetection: true,
+                        confidence: 78.9,
+                        detectedDisease: 'Diabetic Macular Edema',
+                        riskLevel: 'Medium Risk',
+                        imageData: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iIzMzMzMzMyIvPjx0ZXh0IHg9IjEwMCIgeT0iMTAwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iLjNlbSI+T0NUIEltYWdlPC90ZXh0Pjwvc3ZnPg==',
+                        fileName: 'oct_sample_3.jpg'
+                    }
+                ];
+                
+                analysisHistory = sampleData;
+                localStorage.setItem('octAnalysisHistory', JSON.stringify(analysisHistory));
+            }
+            
+            // Load saved data
+            updateDashboard();
+
+            // Close modal when clicking outside
+            if (document.getElementById('confirmModal')) {
+                document.getElementById('confirmModal').addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        hideConfirmModal();
+                    }
+                });
+            }
+
+            if (document.getElementById('analysisConfirmModal')) {
+                document.getElementById('analysisConfirmModal').addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        hideAnalysisConfirmModal();
+                    }
+                });
+            }
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'966df4da940a7dc8',t:'MTc1MzgwNjE2MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'966ed2ca62887993',t:'MTc1MzgxNTI1MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
