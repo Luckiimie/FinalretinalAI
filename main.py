@@ -1,217 +1,386 @@
-from fastapi import FastAPI, HTTPException, Depends, UploadFile, File, Form
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from pydantic import BaseModel
-from typing import List, Optional
-from passlib.context import CryptContext
-import jwt
-import uvicorn
-import os
-from datetime import datetime, timedelta
-from uuid import uuid4
-import shutil
+import streamlit as st
+import base64
+from datetime import datetime
+import json
+import uuid
 
-# Secret key for JWT
-SECRET_KEY = "your_secret_key"
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 60
-
-app = FastAPI()
-
-# CORS middleware to allow frontend access
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # Adjust for production
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+# Page config
+st.set_page_config(
+    page_title="OCT Analysis System",
+    page_icon="👁️",
+    layout="wide",
+    initial_sidebar_state="collapsed"
 )
 
-# Password hashing
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
-
-# In-memory "database" for demo purposes
-users_db = {
-    "doctor": {
-        "username": "doctor",
-        "hashed_password": pwd_context.hash("password123"),
+# Custom CSS
+st.markdown("""
+<style>
+    .main-header {
+        background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+        padding: 1rem;
+        border-radius: 10px;
+        color: white;
+        text-align: center;
+        margin-bottom: 2rem;
     }
-}
+    .upload-area {
+        border: 2px dashed #3b82f6;
+        border-radius: 10px;
+        padding: 2rem;
+        text-align: center;
+        background: #f8fafc;
+    }
+    .result-card {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        margin: 1rem 0;
+    }
+    .confidence-high { color: #10b981; }
+    .confidence-medium { color: #f59e0b; }
+    .confidence-low { color: #ef4444; }
+    .cnv-detected { background: #fef2f2; border-left: 4px solid #ef4444; }
+    .normal-result { background: #f0fdf4; border-left: 4px solid #10b981; }
+</style>
+""", unsafe_allow_html=True)
 
-patients_db = {}
-analyses_db = {}
-notifications_db = {}
+# Initialize session state
+if 'logged_in' not in st.session_state:
+    st.session_state.logged_in = False
+if 'analysis_history' not in st.session_state:
+    st.session_state.analysis_history = []
+if 'current_analysis' not in st.session_state:
+    st.session_state.current_analysis = None
 
-UPLOAD_DIR = "uploads"
-os.makedirs(UPLOAD_DIR, exist_ok=True)
+def login_page():
+    st.markdown("""
+    <div class="main-header">
+        <h1>👁️ OCT Analysis System</h1>
+        <p>AI-Powered CNV Detection System</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
+        st.markdown("### เข้าสู่ระบบ")
+        username = st.text_input("Username", placeholder="doctor")
+        password = st.text_input("Password", type="password", placeholder="123456")
+        
+        if st.button("เข้าสู่ระบบ", use_container_width=True):
+            if username == "doctor" and password == "123456":
+                st.session_state.logged_in = True
+                st.rerun()
+            else:
+                st.error("Invalid credentials. Use username: doctor, password: 123456")
+        
+        st.info("Demo: username: **doctor**, password: **123456**")
 
-# Pydantic models
-class User(BaseModel):
-    username: str
+def analyze_image(image_data):
+    """Simulate AI analysis"""
+    import random
+    import time
+    
+    # Simulate processing time
+    progress_bar = st.progress(0)
+    status_text = st.empty()
+    
+    for i in range(100):
+        progress_bar.progress(i + 1)
+        status_text.text(f'Analyzing... {i+1}%')
+        time.sleep(0.02)
+    
+    # Generate random results
+    confidence = 70 + random.random() * 30
+    has_detection = random.random() > 0.3
+    
+    diseases = [
+        'Choroidal Neovascularization (CNV)',
+        'Diabetic Macular Edema',
+        'Age-related Macular Degeneration',
+        'Macular Hole',
+        'Epiretinal Membrane'
+    ]
+    
+    detected_disease = diseases[random.randint(0, len(diseases)-1)] if has_detection else None
+    
+    result = {
+        'id': str(uuid.uuid4()),
+        'timestamp': datetime.now(),
+        'has_detection': has_detection,
+        'confidence': confidence,
+        'detected_disease': detected_disease,
+        'risk_level': 'High Risk' if (has_detection and confidence > 85) else 'Medium Risk' if has_detection else 'Low Risk',
+        'image_data': image_data
+    }
+    
+    progress_bar.empty()
+    status_text.empty()
+    
+    return result
 
-class Patient(BaseModel):
-    patient_id: str
-    scan_date: datetime
-    eye: str
-
-class AnalysisResult(BaseModel):
-    patient_id: str
-    diagnosis: str
-    confidence: float
-    details: Optional[str] = None
-
-class Notification(BaseModel):
-    id: str
-    message: str
-    timestamp: datetime
-
-# Utility functions
-def verify_password(plain_password, hashed_password):
-    return pwd_context.verify(plain_password, hashed_password)
-
-def authenticate_user(username: str, password: str):
-    user = users_db.get(username)
-    if not user:
-        return False
-    if not verify_password(password, user["hashed_password"]):
-        return False
-    return User(username=username)
-
-def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
-    to_encode = data.copy()
-    expire = datetime.utcnow() + (expires_delta or timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
-    to_encode.update({"exp": expire})
-    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
-    return encoded_jwt
-
-async def get_current_user(token: str = Depends(oauth2_scheme)):
-    credentials_exception = HTTPException(
-        status_code=401,
-        detail="Could not validate credentials",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
-    try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        username: str = payload.get("sub")
-        if username is None:
-            raise credentials_exception
-    except jwt.PyJWTError:
-        raise credentials_exception
-    user = users_db.get(username)
-    if user is None:
-        raise credentials_exception
-    return User(username=username)
-
-# Routes
-@app.post("/token")
-async def login(form_data: OAuth2PasswordRequestForm = Depends()):
-    user = authenticate_user(form_data.username, form_data.password)
-    if not user:
-        raise HTTPException(status_code=400, detail="Incorrect username or password")
-    access_token = create_access_token(data={"sub": user.username})
-    return {"access_token": access_token, "token_type": "bearer"}
-
-@app.post("/patients/", response_model=Patient)
-async def create_patient(patient_id: str = Form(...), scan_date: str = Form(...), eye: str = Form(...), current_user: User = Depends(get_current_user)):
-    if patient_id in patients_db:
-        raise HTTPException(status_code=400, detail="Patient already exists")
-    try:
-        scan_date_dt = datetime.fromisoformat(scan_date)
-    except ValueError:
-        raise HTTPException(status_code=400, detail="Invalid scan_date format")
-    patient = Patient(patient_id=patient_id, scan_date=scan_date_dt, eye=eye)
-    patients_db[patient_id] = patient
-    return patient
-
-@app.get("/patients/{patient_id}", response_model=Patient)
-async def get_patient(patient_id: str, current_user: User = Depends(get_current_user)):
-    patient = patients_db.get(patient_id)
-    if not patient:
-        raise HTTPException(status_code=404, detail="Patient not found")
-    return patient
-
-@app.post("/upload/")
-async def upload_files(patient_id: str = Form(...), files: List[UploadFile] = File(...), current_user: User = Depends(get_current_user)):
-    if patient_id not in patients_db:
-        raise HTTPException(status_code=404, detail="Patient not found")
-    saved_files = []
-    patient_folder = os.path.join(UPLOAD_DIR, patient_id)
-    os.makedirs(patient_folder, exist_ok=True)
-    for file in files:
-        filename = f"{uuid4().hex}_{file.filename}"
-        file_path = os.path.join(patient_folder, filename)
-        with open(file_path, "wb") as buffer:
-            shutil.copyfileobj(file.file, buffer)
-        saved_files.append(filename)
-    return {"filenames": saved_files}
-
-@app.post("/analysis/", response_model=AnalysisResult)
-async def submit_analysis(patient_id: str = Form(...), diagnosis: str = Form(...), confidence: float = Form(...), details: Optional[str] = Form(None), current_user: User = Depends(get_current_user)):
-    if patient_id not in patients_db:
-        raise HTTPException(status_code=404, detail="Patient not found")
-    analysis = AnalysisResult(patient_id=patient_id, diagnosis=diagnosis, confidence=confidence, details=details)
-    analyses_db[patient_id] = analysis
-    return analysis
-
-@app.get("/analysis/{patient_id}", response_model=AnalysisResult)
-async def get_analysis(patient_id: str, current_user: User = Depends(get_current_user)):
-    analysis = analyses_db.get(patient_id)
-    if not analysis:
-        raise HTTPException(status_code=404, detail="Analysis not found")
-    return analysis
-
-@app.get("/history/", response_model=List[Patient])
-async def search_history(patient_id: Optional[str] = None, diagnosis: Optional[str] = None, current_user: User = Depends(get_current_user)):
-    results = []
-    for pid, patient in patients_db.items():
-        if patient_id and patient_id.lower() not in pid.lower():
-            continue
-        if diagnosis:
-            analysis = analyses_db.get(pid)
-            if not analysis or diagnosis.lower() not in analysis.diagnosis.lower():
-                continue
-        results.append(patient)
-    return results
-
-@app.get("/notifications/", response_model=List[Notification])
-async def get_notifications(current_user: User = Depends(get_current_user)):
-    return list(notifications_db.values())
-
-@app.post("/notifications/")
-async def create_notification(message: str = Form(...), current_user: User = Depends(get_current_user)):
-    notif_id = uuid4().hex
-    notification = Notification(id=notif_id, message=message, timestamp=datetime.utcnow())
-    notifications_db[notif_id] = notification
-    return notification
-
-@app.get("/reports/{patient_id}")
-async def download_report(patient_id: str, current_user: User = Depends(get_current_user)):
-    # For demo, generate a simple PDF report on the fly
-    from fastapi.responses import StreamingResponse
-    from io import BytesIO
-    from reportlab.pdfgen import canvas
-
-    if patient_id not in patients_db:
-        raise HTTPException(status_code=404, detail="Patient not found")
-
-    buffer = BytesIO()
-    p = canvas.Canvas(buffer)
-    p.drawString(100, 750, f"RetinaView AI Report for Patient {patient_id}")
-    analysis = analyses_db.get(patient_id)
-    if analysis:
-        p.drawString(100, 720, f"Diagnosis: {analysis.diagnosis}")
-        p.drawString(100, 700, f"Confidence: {analysis.confidence}%")
-        if analysis.details:
-            p.drawString(100, 680, f"Details: {analysis.details}")
+def dashboard_page():
+    st.markdown("""
+    <div class="main-header">
+        <h1>📊 Dashboard</h1>
+        <p>ภาพรวมการวิเคราะห์และสถิติ</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Stats
+    total_analyses = len(st.session_state.analysis_history)
+    cnv_detected = sum(1 for a in st.session_state.analysis_history if a.get('has_detection', False))
+    normal_results = total_analyses - cnv_detected
+    avg_confidence = sum(a.get('confidence', 0) for a in st.session_state.analysis_history) / max(total_analyses, 1)
+    
+    col1, col2, col3, col4 = st.columns(4)
+    
+    with col1:
+        st.metric("Total Analyses", total_analyses, delta=None)
+    with col2:
+        st.metric("CNV Detected", cnv_detected, delta=None)
+    with col3:
+        st.metric("Normal Results", normal_results, delta=None)
+    with col4:
+        st.metric("Avg Confidence", f"{avg_confidence:.1f}%", delta=None)
+    
+    # Recent analyses
+    st.markdown("### Recent Analyses")
+    if st.session_state.analysis_history:
+        for analysis in st.session_state.analysis_history[:5]:
+            result_class = "cnv-detected" if analysis.get('has_detection') else "normal-result"
+            st.markdown(f"""
+            <div class="result-card {result_class}">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <strong>Analysis {analysis['id'][:8]}</strong><br>
+                        <small>{analysis['timestamp'].strftime('%Y-%m-%d %H:%M')}</small>
+                    </div>
+                    <div style="text-align: right;">
+                        <span style="font-weight: bold;">
+                            {'⚠️ CNV Detected' if analysis.get('has_detection') else '✅ Normal'}
+                        </span><br>
+                        <small>{analysis.get('confidence', 0):.1f}% confidence</small>
+                    </div>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
     else:
-        p.drawString(100, 720, "No analysis available.")
-    p.showPage()
-    p.save()
-    buffer.seek(0)
-    return StreamingResponse(buffer, media_type="application/pdf", headers={"Content-Disposition": f"attachment; filename=report_{patient_id}.pdf"})
+        st.info("No analyses yet. Start by uploading an OCT image.")
+
+def upload_page():
+    st.markdown("""
+    <div class="main-header">
+        <h1>📁 Upload OCT Image</h1>
+        <p>Upload your OCT B-Scan image for AI analysis</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    uploaded_file = st.file_uploader(
+        "Choose an OCT image file",
+        type=['png', 'jpg', 'jpeg', 'bmp', 'tiff'],
+        help="Upload OCT B-Scan images in common formats"
+    )
+    
+    if uploaded_file is not None:
+        # Display image
+        col1, col2 = st.columns([2, 1])
+        
+        with col1:
+            st.image(uploaded_file, caption="Uploaded OCT Image", use_column_width=True)
+        
+        with col2:
+            st.markdown("### Image Information")
+            st.write(f"**Filename:** {uploaded_file.name}")
+            st.write(f"**Size:** {uploaded_file.size} bytes")
+            st.write(f"**Type:** {uploaded_file.type}")
+        
+        if st.button("🔍 Start Analysis", use_container_width=True, type="primary"):
+            # Convert image to base64 for storage
+            image_data = base64.b64encode(uploaded_file.read()).decode()
+            
+            # Analyze image
+            with st.spinner("Analyzing image..."):
+                result = analyze_image(image_data)
+                st.session_state.current_analysis = result
+                st.session_state.analysis_history.insert(0, result)
+            
+            # Show results
+            show_results(result)
+
+def show_results(result):
+    st.markdown("---")
+    st.markdown("## 📊 Analysis Results")
+    
+    # Main result
+    if result['has_detection']:
+        st.markdown(f"""
+        <div class="result-card cnv-detected">
+            <h3>⚠️ CNV DETECTED</h3>
+            <p><strong>Disease:</strong> {result['detected_disease']}</p>
+            <p><strong>Risk Level:</strong> {result['risk_level']}</p>
+            <p><strong>Confidence:</strong> {result['confidence']:.1f}%</p>
+        </div>
+        """, unsafe_allow_html=True)
+    else:
+        st.markdown(f"""
+        <div class="result-card normal-result">
+            <h3>✅ NORMAL RESULT</h3>
+            <p><strong>Status:</strong> No abnormalities detected</p>
+            <p><strong>Risk Level:</strong> {result['risk_level']}</p>
+            <p><strong>Confidence:</strong> {result['confidence']:.1f}%</p>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    # Confidence visualization
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.markdown("### Confidence Score")
+        confidence_class = "confidence-high" if result['confidence'] > 90 else "confidence-medium" if result['confidence'] > 70 else "confidence-low"
+        st.markdown(f"<h2 class='{confidence_class}'>{result['confidence']:.1f}%</h2>", unsafe_allow_html=True)
+        
+        # Progress bar
+        st.progress(result['confidence'] / 100)
+    
+    with col2:
+        st.markdown("### Recommendations")
+        if result['has_detection']:
+            if result['confidence'] > 85:
+                st.error("🚨 Urgent referral to retina specialist recommended")
+            st.warning("💉 Anti-VEGF injection may be indicated")
+            st.info("📊 Report generated for physician review")
+        else:
+            st.success("✅ Continue routine eye examinations")
+    
+    # Download report button
+    if st.button("📄 Download Report", use_container_width=True):
+        report_data = generate_report(result)
+        st.download_button(
+            label="Download Analysis Report",
+            data=report_data,
+            file_name=f"OCT_Analysis_Report_{result['id'][:8]}_{datetime.now().strftime('%Y%m%d')}.txt",
+            mime="text/plain"
+        )
+
+def generate_report(result):
+    report = f"""
+OCT ANALYSIS REPORT
+==================
+
+Analysis ID: {result['id']}
+Analysis Date: {result['timestamp'].strftime('%Y-%m-%d')}
+Analysis Time: {result['timestamp'].strftime('%H:%M:%S')}
+
+ANALYSIS RESULTS:
+- Status: {'CNV DETECTED' if result['has_detection'] else 'NORMAL'}
+- Confidence: {result['confidence']:.1f}%
+- Risk Level: {result['risk_level']}
+{f"- Detected Disease: {result['detected_disease']}" if result.get('detected_disease') else ''}
+
+SUMMARY:
+{result['detected_disease'] + ' detected' if result['has_detection'] else 'No abnormalities detected'} with {result['confidence']:.1f}% confidence.
+
+RECOMMENDATIONS:
+{('- Urgent referral to retina specialist' if result['confidence'] > 85 else '- Further evaluation recommended') if result['has_detection'] else '- Continue routine examinations'}
+
+Generated by OCT Analysis System
+    """.strip()
+    
+    return report
+
+def history_page():
+    st.markdown("""
+    <div class="main-header">
+        <h1>📋 Patient History</h1>
+        <p>ประวัติการวิเคราะห์ทั้งหมด</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    if not st.session_state.analysis_history:
+        st.info("No analysis history found. Start analyzing OCT images to see history here.")
+        return
+    
+    # Filters
+    col1, col2, col3 = st.columns([2, 2, 1])
+    
+    with col1:
+        filter_option = st.selectbox(
+            "Filter by Result",
+            ["All Results", "CNV Detected", "Normal"]
+        )
+    
+    with col2:
+        sort_option = st.selectbox(
+            "Sort by",
+            ["Newest First", "Oldest First", "Highest Confidence"]
+        )
+    
+    with col3:
+        if st.button("🗑️ Clear History"):
+            st.session_state.analysis_history = []
+            st.rerun()
+    
+    # Apply filters
+    filtered_history = st.session_state.analysis_history.copy()
+    
+    if filter_option == "CNV Detected":
+        filtered_history = [a for a in filtered_history if a.get('has_detection', False)]
+    elif filter_option == "Normal":
+        filtered_history = [a for a in filtered_history if not a.get('has_detection', False)]
+    
+    # Apply sorting
+    if sort_option == "Oldest First":
+        filtered_history.reverse()
+    elif sort_option == "Highest Confidence":
+        filtered_history.sort(key=lambda x: x.get('confidence', 0), reverse=True)
+    
+    # Display history
+    for analysis in filtered_history:
+        result_class = "cnv-detected" if analysis.get('has_detection') else "normal-result"
+        st.markdown(f"""
+        <div class="result-card {result_class}">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <strong>Analysis {analysis['id'][:8]}</strong><br>
+                    <small>{analysis['timestamp'].strftime('%Y-%m-%d %H:%M:%S')}</small><br>
+                    {f"<small><strong>Disease:</strong> {analysis.get('detected_disease', 'N/A')}</small>" if analysis.get('has_detection') else ''}
+                </div>
+                <div style="text-align: right;">
+                    <span style="font-weight: bold;">
+                        {'⚠️ CNV Detected' if analysis.get('has_detection') else '✅ Normal'}
+                    </span><br>
+                    <small>{analysis.get('confidence', 0):.1f}% confidence</small><br>
+                    <small><strong>Risk:</strong> {analysis.get('risk_level', 'N/A')}</small>
+                </div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+def main():
+    if not st.session_state.logged_in:
+        login_page()
+        return
+    
+    # Sidebar navigation
+    with st.sidebar:
+        st.markdown("### Navigation")
+        page = st.radio(
+            "Choose a page:",
+            ["📊 Dashboard", "📁 Upload", "📋 History", "🚪 Logout"]
+        )
+        
+        if page == "🚪 Logout":
+            st.session_state.logged_in = False
+            st.rerun()
+    
+    # Main content
+    if page == "📊 Dashboard":
+        dashboard_page()
+    elif page == "📁 Upload":
+        upload_page()
+    elif page == "📋 History":
+        history_page()
 
 if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    main()
